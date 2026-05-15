@@ -14,60 +14,220 @@ export type Database = {
   }
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          tenant_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          tenant_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          tenant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
-          category: string
-          created_at: string
+          category: string[] | null
+          created_at: string | null
           description: string | null
           id: string
-          image_url: string | null
-          name: string
+          image: string | null
+          offer_price: number | null
           price: number
-          sort_order: number
-          updated_at: string
+          rating: number | null
+          stock: string | null
+          tenant_id: string
+          title: string
         }
         Insert: {
-          category: string
-          created_at?: string
+          category?: string[] | null
+          created_at?: string | null
           description?: string | null
           id?: string
-          image_url?: string | null
-          name: string
-          price?: number
-          sort_order?: number
-          updated_at?: string
+          image?: string | null
+          offer_price?: number | null
+          price: number
+          rating?: number | null
+          stock?: string | null
+          tenant_id: string
+          title: string
         }
         Update: {
-          category?: string
-          created_at?: string
+          category?: string[] | null
+          created_at?: string | null
           description?: string | null
           id?: string
-          image_url?: string | null
-          name?: string
+          image?: string | null
+          offer_price?: number | null
           price?: number
-          sort_order?: number
-          updated_at?: string
+          rating?: number | null
+          stock?: string | null
+          tenant_id?: string
+          title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "products_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      user_roles: {
+      reservations: {
         Row: {
           created_at: string
+          date: string
           id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
+          message: string | null
+          name: string
+          phone: string
+          status: string
+          tenant_id: string
+          time_slot: string | null
         }
         Insert: {
           created_at?: string
+          date: string
           id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
+          message?: string | null
+          name: string
+          phone: string
+          status?: string
+          tenant_id: string
+          time_slot?: string | null
         }
         Update: {
           created_at?: string
+          date?: string
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          message?: string | null
+          name?: string
+          phone?: string
+          status?: string
+          tenant_id?: string
+          time_slot?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reservations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_settings: {
+        Row: {
+          ad_image_url: string | null
+          ad_link: string | null
+          ad_message: string | null
+          schedule: string | null
+          tenant_id: string
+          updated_at: string
+          whatsapp: string | null
+          zones: string | null
+        }
+        Insert: {
+          ad_image_url?: string | null
+          ad_link?: string | null
+          ad_message?: string | null
+          schedule?: string | null
+          tenant_id: string
+          updated_at?: string
+          whatsapp?: string | null
+          zones?: string | null
+        }
+        Update: {
+          ad_image_url?: string | null
+          ad_link?: string | null
+          ad_message?: string | null
+          schedule?: string | null
+          tenant_id?: string
+          updated_at?: string
+          whatsapp?: string | null
+          zones?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_settings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_users: {
+        Row: {
+          id: string
+          role: string | null
+          tenant_id: string | null
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: string | null
+          tenant_id?: string | null
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: string | null
+          tenant_id?: string | null
           user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_users_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenants: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          slug?: string
         }
         Relationships: []
       }
@@ -76,16 +236,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -212,8 +366,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin"],
-    },
+    Enums: {},
   },
 } as const

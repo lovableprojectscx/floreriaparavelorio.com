@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { Header } from "@/components/landing/Header";
@@ -9,6 +9,7 @@ import { Empathy } from "@/components/landing/Empathy";
 import { Contact } from "@/components/landing/Contact";
 import { Footer } from "@/components/landing/Footer";
 import { FloatingWhatsApp } from "@/components/landing/FloatingWhatsApp";
+import { X } from "lucide-react";
 import type { Product } from "@/components/landing/products";
 
 const TENANT_ID = "54a66b4a-6181-4b3f-b173-6398d0f33b2d";
@@ -38,11 +39,27 @@ const fetchProductsSSR = createServerFn({ method: "GET" }).handler(async () => {
   })) as Product[];
 });
 
+const fetchSettingsSSR = createServerFn({ method: "GET" }).handler(async () => {
+  const { createClient } = await import("@supabase/supabase-js");
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_PUBLISHABLE_KEY!,
+  );
+  const { data } = await supabase
+    .from("tenant_settings")
+    .select("whatsapp, ad_image_url, ad_message, ad_link, ad_active")
+    .eq("tenant_id", TENANT_ID)
+    .single();
+
+  return data;
+});
+
 export const Route = createFileRoute("/")({
   // loader corre en servidor antes de renderizar — los productos llegan en el HTML inicial
   loader: async () => {
     const products = await fetchProductsSSR();
-    return { products };
+    const settings = await fetchSettingsSSR();
+    return { products, settings };
   },
   component: Index,
   head: () => ({
@@ -108,7 +125,32 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { products } = Route.useLoaderData();
+  const { products, settings } = Route.useLoaderData();
+  const [showAd, setShowAd] = useState(false);
+
+  useEffect(() => {
+    // Mostrar publicidad siempre que exista la imagen y esté activada
+    if (settings?.ad_active !== false && settings?.ad_image_url) {
+      setShowAd(true);
+    }
+  }, [settings?.ad_image_url, settings?.ad_active]);
+
+  const handleCloseAd = () => {
+    setShowAd(false);
+  };
+
+  const handleAdClick = () => {
+    if (!settings) return;
+    if (settings.ad_link) {
+      window.open(settings.ad_link, "_blank");
+    } else {
+      const phone = (settings.whatsapp || "51994068553").replace(/\D/g, "");
+      const msg = encodeURIComponent(settings.ad_message || "Hola, me interesa este producto.");
+      window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
+    }
+    handleCloseAd();
+  };
+
   return (
     <>
       <Header />
@@ -121,6 +163,35 @@ function Index() {
       </main>
       <Footer />
       <FloatingWhatsApp />
+
+      {/* Popup Publicitario */}
+      {showAd && settings?.ad_image_url && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity"
+          onClick={handleCloseAd}
+        >
+          <div 
+            className="relative w-full max-w-3xl overflow-hidden rounded-md shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+            style={{ backgroundColor: "#0A0A0A", border: "1px solid #C9A84C" }}
+          >
+            <button 
+              onClick={handleCloseAd}
+              className="absolute top-3 right-3 z-10 p-2 bg-black/60 hover:bg-black/90 rounded-full text-white transition-colors"
+              aria-label="Cerrar publicidad"
+            >
+              <X size={20} />
+            </button>
+            <div className="w-full cursor-pointer group" onClick={handleAdClick}>
+              <img 
+                src={settings.ad_image_url} 
+                alt="Publicidad Especial" 
+                className="w-full h-auto max-h-[80vh] object-cover transition-transform duration-700 group-hover:scale-[1.02]" 
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

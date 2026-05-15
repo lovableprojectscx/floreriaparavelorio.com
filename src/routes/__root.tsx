@@ -12,7 +12,6 @@ import { SettingsProvider } from "@/lib/SettingsContext";
 
 import appCss from "../styles.css?url";
 import "../styles.css";
-import faviconUrl from "@/assets/favicon.webp";
 import socialImageUrl from "@/assets/hero-desktop.webp";
 
 function NotFoundComponent() {
@@ -104,7 +103,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       // Solo Supabase necesita preconnect — fuentes ya son locales
       { rel: "preconnect", href: "https://llasbukvdjlvwlgofgke.supabase.co", crossOrigin: "anonymous" },
-      { rel: "icon", type: "image/webp", href: faviconUrl },
+      { rel: "icon", type: "image/webp", href: "/logo.webp" },
       { rel: "sitemap", type: "application/xml", href: "https://www.floreriaparavelorio.com/sitemap.xml" },
       {
         rel: "stylesheet",

@@ -128,6 +128,10 @@ export function useSettings() {
     whatsapp: "+51 994 068 553",
     schedule: "Lun a Dom · 24 horas",
     zones: "Lima Metropolitana, Callao, Ate, San Juan de Lurigancho, Comas, Los Olivos",
+    ad_image_url: "",
+    ad_message: "Hola, me interesa este producto.",
+    ad_link: "",
+    ad_active: true,
   });
   const [loading, setLoading] = useState(true);
 
@@ -144,6 +148,10 @@ export function useSettings() {
         whatsapp: data.whatsapp || "",
         schedule: data.schedule || "",
         zones: data.zones || "",
+        ad_image_url: data.ad_image_url || "",
+        ad_message: data.ad_message || "",
+        ad_link: data.ad_link || "",
+        ad_active: data.ad_active !== false,
       });
     }
     setLoading(false);
@@ -159,6 +167,10 @@ export function useSettings() {
       whatsapp: newSettings.whatsapp,
       schedule: newSettings.schedule,
       zones: newSettings.zones,
+      ad_image_url: newSettings.ad_image_url,
+      ad_message: newSettings.ad_message,
+      ad_link: newSettings.ad_link,
+      ad_active: newSettings.ad_active,
       updated_at: new Date().toISOString()
     });
     if (!error) setSettings(newSettings);

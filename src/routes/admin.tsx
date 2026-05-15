@@ -1,11 +1,43 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
-  Plus, Pencil, Trash2, Upload, X, Search, Package, Tag, Building2, LogOut
+  Plus, Pencil, Trash2, Upload, X, Search, Package, Tag, Building2, LogOut, Megaphone
 } from "lucide-react";
 import { products as seedProducts, formatPrice, type Product } from "@/components/landing/products";
 import { supabase } from "@/lib/supabase";
 import { useProducts, useCategories, useSettings } from "@/lib/useProducts";
+
+// Función para transformar imágenes a WebP en el cliente manteniendo altísima calidad (0.95)
+const convertToWebP = (file: File): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject(new Error("Error al inicializar el canvas"));
+      ctx.drawImage(img, 0, 0);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return reject(new Error("Error al procesar la imagen"));
+          const newName = file.name.replace(/\.[^/.]+$/, "") + ".webp";
+          const newFile = new File([blob], newName, { type: "image/webp" });
+          resolve(newFile);
+        },
+        "image/webp",
+        0.95 // 95% de calidad
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("Error al cargar la imagen original"));
+    };
+    img.src = url;
+  });
+};
 
 export const Route = createFileRoute("/admin")({
   beforeLoad: async () => {
@@ -18,7 +50,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Tab = "productos" | "categorias" | "negocio";
+type Tab = "productos" | "categorias" | "negocio" | "publicidad";
 
 function AdminPage() {
   const [tab, setTab] = useState<Tab>("productos");
@@ -46,6 +78,7 @@ function AdminPage() {
           <NavBtn icon={<Package size={15} />} label="Productos" active={tab === "productos"} onClick={() => setTab("productos")} />
           <NavBtn icon={<Tag size={15} />} label="Categorías" active={tab === "categorias"} onClick={() => setTab("categorias")} />
           <NavBtn icon={<Building2 size={15} />} label="Negocio" active={tab === "negocio"} onClick={() => setTab("negocio")} />
+          <NavBtn icon={<Megaphone size={15} />} label="Publicidad" active={tab === "publicidad"} onClick={() => setTab("publicidad")} />
         </nav>
         
         <div className="mt-auto pt-10">
@@ -66,7 +99,7 @@ function AdminPage() {
           style={{ borderColor: "#1A1A1A", backgroundColor: "#080808" }}
         >
           <div className="flex">
-            {(["productos", "categorias", "negocio"] as Tab[]).map((t) => (
+            {(["productos", "categorias", "negocio", "publicidad"] as Tab[]).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
@@ -88,6 +121,7 @@ function AdminPage() {
         {tab === "productos" && <ProductsPanel />}
         {tab === "categorias" && <CategoriesPanel />}
         {tab === "negocio" && <BusinessPanel />}
+        {tab === "publicidad" && <AdvertisingPanel />}
       </main>
     </div>
   );
@@ -161,20 +195,19 @@ function ProductsPanel() {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const onPickImage = async (file: File) => {
+  const onPickImage = async (originalFile: File) => {
     if (!editing) return;
     setUploading(true);
     setUploadError(null);
 
     try {
-      // Generate a unique filename: tenantId/timestamp-randomhex.ext
+      const file = await convertToWebP(originalFile);
       const tenantId = import.meta.env.VITE_TENANT_ID;
-      const ext = file.name.split(".").pop() ?? "jpg";
-      const filename = `${tenantId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const filename = `${tenantId}/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
 
       const { error } = await supabase.storage
         .from("product-images")
-        .upload(filename, file, { upsert: false, contentType: file.type });
+        .upload(filename, file, { upsert: false, contentType: "image/webp" });
 
       if (error) {
         setUploadError(`Error al subir: ${error.message}`);
@@ -276,7 +309,7 @@ function ProductsPanel() {
               ) : (
                 <div className="h-full flex flex-col items-center justify-center gap-2" style={{ color: "#9A9087" }}>
                   <Upload size={22} /><span className="text-[10px] uppercase tracking-[0.2em]">Subir foto</span>
-                  <span className="text-[10px] text-center px-4" style={{ color: "#5C5750" }}>JPG, PNG, WebP · Máx. 5 MB</span>
+                  <span className="text-[10px] text-center px-4" style={{ color: "#5C5750" }}>Sin límite de tamaño · Se optimiza a WebP</span>
                 </div>
               )}
               <input
@@ -523,11 +556,17 @@ function BusinessPanel() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    if (!loading) setData(settings);
+    if (!loading && settings) {
+      setData({
+        whatsapp: settings.whatsapp || "+51 994 068 553",
+        schedule: settings.schedule || "Lun a Dom · 24 horas",
+        zones: settings.zones || "Lima Metropolitana, Callao, Ate, San Juan de Lurigancho, Comas, Los Olivos",
+      });
+    }
   }, [loading, settings]);
 
   const handleSave = async () => {
-    await saveSettings(data);
+    await saveSettings({ ...settings, ...data });
     setSaved(true);
     setTimeout(() => setSaved(false), 1800);
   };
@@ -554,6 +593,172 @@ function BusinessPanel() {
             rows={4} className="form-input resize-none"
             placeholder="Separadas por coma"
           />
+        </Field>
+
+        <div className="flex items-center gap-4 pt-4">
+          <button
+            onClick={handleSave}
+            className="px-6 py-3 text-xs uppercase tracking-[0.25em] hover:opacity-90"
+            style={{ backgroundColor: "#C9A84C", color: "#0A0A0A" }}
+          >
+            Guardar cambios
+          </button>
+          {saved && (
+            <span className="text-[11px] uppercase tracking-[0.2em]" style={{ color: "#7BB07B" }}>
+              ✓ Guardado
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ───────────────────────── PUBLICIDAD ───────────────────────── */
+
+function AdvertisingPanel() {
+  const { settings, loading, saveSettings } = useSettings();
+  const [data, setData] = useState({
+    ad_image_url: "",
+    ad_message: "Hola, me interesa este producto.",
+    ad_link: "",
+    ad_active: true,
+  });
+  const [saved, setSaved] = useState(false);
+  const [uploadingAd, setUploadingAd] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!loading && settings) {
+      setData({
+        ad_image_url: settings.ad_image_url || "",
+        ad_message: settings.ad_message || "Hola, me interesa este producto.",
+        ad_link: settings.ad_link || "",
+        ad_active: settings.ad_active !== false,
+      });
+    }
+  }, [loading, settings]);
+
+  const onPickAdImage = async (originalFile: File) => {
+    setUploadingAd(true);
+    setUploadError(null);
+    try {
+      const file = await convertToWebP(originalFile);
+      const tenantId = import.meta.env.VITE_TENANT_ID;
+      const filename = `${tenantId}/ad-${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
+
+      const { error } = await supabase.storage
+        .from("product-images")
+        .upload(filename, file, { upsert: false, contentType: "image/webp" });
+
+      if (error) {
+        setUploadError(`Error al subir: ${error.message}`);
+        return;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("product-images")
+        .getPublicUrl(filename);
+
+      setData({ ...data, ad_image_url: urlData.publicUrl });
+    } catch (err: any) {
+      setUploadError(`Error inesperado: ${err.message}`);
+    } finally {
+      setUploadingAd(false);
+    }
+  };
+
+  const handleSave = async () => {
+    await saveSettings({ ...settings, ...data });
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1800);
+  };
+
+  return (
+    <div className="p-6 md:p-10 max-w-2xl mx-auto">
+      <SectionHeader eyebrow="Marketing" title="Publicidad Principal" />
+
+      <div className="space-y-6">
+        <div className="flex items-center justify-between p-4 rounded-md mb-2" style={{ backgroundColor: data.ad_active ? "rgba(123, 176, 123, 0.1)" : "#0E0E0E", border: "1px solid", borderColor: data.ad_active ? "#7BB07B" : "#1A1A1A" }}>
+          <div>
+            <p className="font-medium text-sm" style={{ color: data.ad_active ? "#7BB07B" : "#9A9087" }}>
+              {data.ad_active ? "Publicidad Activada" : "Publicidad Desactivada"}
+            </p>
+            <p className="text-[10px] uppercase tracking-[0.1em] mt-1" style={{ color: "#5C5750" }}>
+              {data.ad_active ? "El pop-up se mostrará a los clientes." : "El pop-up está oculto."}
+            </p>
+          </div>
+          <button 
+            onClick={() => setData({ ...data, ad_active: !data.ad_active })}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${data.ad_active ? 'bg-[#7BB07B]' : 'bg-[#2A2A2A]'}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${data.ad_active ? 'translate-x-6' : 'translate-x-1'}`} />
+          </button>
+        </div>
+
+        <div className="p-4 mb-4 text-[11px]" style={{ backgroundColor: "#0E0E0E", border: "1px solid #1A1A1A", color: "#9A9087", opacity: data.ad_active ? 1 : 0.5 }}>
+          <p className="font-semibold mb-2" style={{ color: "#F0EBE3" }}>Dimensiones recomendadas para el Pop-up:</p>
+          <ul className="list-disc pl-4 space-y-1">
+            <li><strong>Formato Cuadrado:</strong> 1080 x 1080 píxeles (Recomendado para móviles y PC).</li>
+            <li><strong>Formato Vertical:</strong> 1080 x 1350 píxeles (Estilo post de Instagram).</li>
+            <li><strong>Formato Horizontal:</strong> 1080 x 800 píxeles.</li>
+            <li><strong>Peso de archivo:</strong> Sin límite. (Se optimizará a WebP automáticamente sin perder calidad visual).</li>
+          </ul>
+        </div>
+
+        <Field label="Imagen publicitaria">
+          <label
+            className={`block aspect-video md:aspect-[2/1] overflow-hidden relative group ${uploadingAd ? "cursor-wait opacity-70" : "cursor-pointer"}`}
+            style={{ backgroundColor: "#0E0E0E", border: "1px dashed #2A2A2A" }}
+          >
+            {data.ad_image_url && !uploadingAd ? (
+              <>
+                <img src={data.ad_image_url} alt="Ad" className="h-full w-full object-cover" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                  <Upload size={20} style={{ color: "#C9A84C" }} />
+                  <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "#F0EBE3" }}>Cambiar imagen</span>
+                </div>
+              </>
+            ) : uploadingAd ? (
+              <div className="h-full flex flex-col items-center justify-center gap-3" style={{ color: "#C9A84C" }}>
+                <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "#9A9087" }}>Subiendo imagen…</span>
+              </div>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center gap-2" style={{ color: "#9A9087" }}>
+                <Upload size={22} /><span className="text-[10px] uppercase tracking-[0.2em]">Subir imagen</span>
+                <span className="text-[10px] text-center px-4" style={{ color: "#5C5750" }}>Ver dimensiones recomendadas arriba</span>
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+              className="hidden"
+              disabled={uploadingAd}
+              onChange={(e) => e.target.files?.[0] && onPickAdImage(e.target.files[0])}
+            />
+          </label>
+          {uploadError && (
+            <p className="text-xs mt-2" style={{ color: "#F0AFA0" }}>⚠ {uploadError}</p>
+          )}
+        </Field>
+
+        <Field label="Mensaje de WhatsApp para la publicidad">
+          <textarea
+            value={data.ad_message} onChange={(e) => setData({ ...data, ad_message: e.target.value })}
+            rows={2} className="form-input resize-none"
+            placeholder="Ej: Hola, quiero más información sobre..."
+          />
+        </Field>
+
+        <Field label="Enlace alternativo (Opcional)">
+          <input 
+            value={data.ad_link} onChange={(e) => setData({ ...data, ad_link: e.target.value })} 
+            className="form-input" placeholder="https://ejemplo.com" 
+          />
+          <p className="text-[11px] mt-2" style={{ color: "#9A9087" }}>
+            Si colocas un enlace, al hacer clic en la imagen redirigirá aquí en lugar de ir a WhatsApp.
+          </p>
         </Field>
 
         <div className="flex items-center gap-4 pt-4">

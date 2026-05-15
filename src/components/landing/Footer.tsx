@@ -7,9 +7,9 @@ export function Footer() {
       style={{ backgroundColor: "#0A0A0A", borderTop: "1px solid #2A2A2A" }}
     >
       <div className="mx-auto max-w-2xl space-y-2">
-        <p className="font-display text-sm" style={{ color: "#C9A84C" }}>
-          Florería Miguel Flores
-        </p>
+        <div className="flex justify-center mb-6">
+          <img src="/logo.webp" alt="Florería Miguel Flores" className="h-12 md:h-16 w-auto" />
+        </div>
         <p className="text-sm text-muted-foreground">
           Arreglos florales para velorio con delivery el mismo día en Lima y Callao
         </p>
