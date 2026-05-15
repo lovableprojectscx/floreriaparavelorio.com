@@ -1,5 +1,5 @@
 # Florería Miguel Flores — robots.txt
-# https://miguelflores.idenza.site
+# https://www.floreriaparavelorio.com
 
 User-agent: *
 Allow: /
@@ -15,7 +15,7 @@ Disallow: /_build
 Disallow: /api/
 
 # Sitemap para buscadores
-Sitemap: https://miguelflores.idenza.site/sitemap.xml
+Sitemap: https://www.floreriaparavelorio.com/sitemap.xml
 
 # Crawl delay (respetuoso con los servidores)
 Crawl-delay: 5

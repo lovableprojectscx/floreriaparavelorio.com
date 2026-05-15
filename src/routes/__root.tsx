@@ -90,7 +90,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Florería Miguel Flores" },
       { property: "og:title", content: "Miguel Flores | Arreglos Funerarios en Lima" },
       { property: "og:description", content: "Arreglos florales para velorio con delivery el mismo día. Coronas, cruces y ramos. Atención 24 horas por WhatsApp." },
-      { property: "og:url", content: "https://miguelflores.idenza.site" },
+      { property: "og:url", content: "https://www.floreriaparavelorio.com" },
       { property: "og:image", content: socialImageUrl },
       // --- Twitter Card ---
       { name: "twitter:card", content: "summary_large_image" },
@@ -102,7 +102,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // Solo Supabase necesita preconnect — fuentes ya son locales
       { rel: "preconnect", href: "https://llasbukvdjlvwlgofgke.supabase.co", crossOrigin: "anonymous" },
       { rel: "icon", type: "image/webp", href: faviconUrl },
-      { rel: "sitemap", type: "application/xml", href: "https://miguelflores.idenza.site/sitemap.xml" },
+      { rel: "sitemap", type: "application/xml", href: "https://www.floreriaparavelorio.com/sitemap.xml" },
       {
         rel: "stylesheet",
         href: appCss,
