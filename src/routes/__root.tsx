@@ -13,6 +13,7 @@ import { SettingsProvider } from "@/lib/SettingsContext";
 import appCss from "../styles.css?url";
 import "../styles.css";
 import faviconUrl from "@/assets/favicon.webp";
+import socialImageUrl from "@/assets/hero-desktop.webp";
 
 function NotFoundComponent() {
   return (
@@ -90,10 +91,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Miguel Flores | Arreglos Funerarios en Lima" },
       { property: "og:description", content: "Arreglos florales para velorio con delivery el mismo día. Coronas, cruces y ramos. Atención 24 horas por WhatsApp." },
       { property: "og:url", content: "https://miguelflores.idenza.site" },
+      { property: "og:image", content: socialImageUrl },
       // --- Twitter Card ---
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Miguel Flores | Arreglos Funerarios Lima 24h" },
       { name: "twitter:description", content: "Delivery de arreglos florales para velorio en Lima y Callao. Atención inmediata por WhatsApp." },
+      { name: "twitter:image", content: socialImageUrl },
     ],
     links: [
       // Solo Supabase necesita preconnect — fuentes ya son locales
