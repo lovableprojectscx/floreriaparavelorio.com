@@ -111,7 +111,7 @@ function NavBtn({ icon, label, active, onClick }: { icon: React.ReactNode; label
 
 function SectionHeader({ eyebrow, title, action }: { eyebrow: string; title: string; action?: React.ReactNode }) {
   return (
-    <div className="flex items-end justify-between mb-8">
+    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
       <div>
         <p className="text-[10px] uppercase mb-1" style={{ color: "#C9A84C", letterSpacing: "0.3em" }}>
           {eyebrow}
@@ -222,21 +222,30 @@ function ProductsPanel() {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-5">
         {filtered.map((p) => (
           <article key={p.slug} className="group flex flex-col" style={{ backgroundColor: "#0E0E0E", border: "1px solid #1A1A1A" }}>
             <div className="aspect-[4/5] overflow-hidden" style={{ backgroundColor: "#0A0A0A" }}>
               <img src={p.image} alt={p.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
             </div>
-            <div className="p-4 flex-1 flex flex-col">
-              <p className="text-[10px] uppercase mb-1" style={{ color: "#9A9087", letterSpacing: "0.25em" }}>{p.category}</p>
-              <h3 className="font-display text-base leading-tight mb-2">{p.name}</h3>
-              <div className="mt-auto flex gap-2">
-                <button onClick={() => openEdit(p)} className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 text-[10px] uppercase tracking-[0.2em]" style={{ border: "1px solid #2A2A2A", color: "#F0EBE3" }}>
-                  <Pencil size={12} /> Editar
+            <div className="p-3 md:p-4 flex-1 flex flex-col">
+              <p className="text-[8px] md:text-[10px] uppercase mb-1" style={{ color: "#9A9087", letterSpacing: "0.25em" }}>{p.category}</p>
+              <h3 className="font-display text-xs md:text-base leading-tight mb-3 line-clamp-1 md:line-clamp-2">{p.name}</h3>
+              <div className="mt-auto flex gap-1.5">
+                <button 
+                  onClick={() => openEdit(p)} 
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 text-[8px] md:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.2em]" 
+                  style={{ border: "1px solid #2A2A2A", color: "#F0EBE3" }}
+                >
+                  <Pencil size={11} /> <span className="hidden xs:inline">Editar</span>
                 </button>
-                <button onClick={() => setConfirmDelete(p.slug)} className="p-2 hover:opacity-80" style={{ border: "1px solid #2A2A2A", color: "#C97070" }} aria-label="Eliminar">
-                  <Trash2 size={14} />
+                <button 
+                  onClick={() => setConfirmDelete(p.slug)} 
+                  className="p-2 hover:opacity-80" 
+                  style={{ border: "1px solid #2A2A2A", color: "#C97070" }} 
+                  aria-label="Eliminar"
+                >
+                  <Trash2 size={12} className="md:w-3.5 md:h-3.5" />
                 </button>
               </div>
             </div>
@@ -580,7 +589,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Drawer({ title, children, onClose, onSave }: { title: string; children: React.ReactNode; onClose: () => void; onSave: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-stretch justify-end" style={{ backgroundColor: "rgba(0,0,0,0.7)" }} onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md h-full overflow-y-auto" style={{ backgroundColor: "#0A0A0A", borderLeft: "1px solid #1A1A1A" }}>
+      <div onClick={(e) => e.stopPropagation()} className="w-full md:max-w-md h-full overflow-y-auto" style={{ backgroundColor: "#0A0A0A", borderLeft: "1px solid #1A1A1A" }}>
         <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: "#1A1A1A" }}>
           <h2 className="font-display text-xl">{title}</h2>
           <button onClick={onClose} aria-label="Cerrar" className="p-1 hover:opacity-70" style={{ color: "#9A9087" }}><X size={20} /></button>
