@@ -13,6 +13,9 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
   ],
+  build: {
+    sourcemap: false,
+  },
   server: {
     port: 8080,
     strictPort: true,
