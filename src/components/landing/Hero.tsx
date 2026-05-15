@@ -17,6 +17,9 @@ export function Hero() {
         src={heroMobile}
         alt="Corona funeraria premium para velorio con envío a domicilio en Lima - Florería Miguel Flores"
         className="block md:hidden w-full h-auto"
+        width={1536}
+        height={2752}
+        fetchPriority="high"
       />
 
       {/* Desktop: contain full image within viewport height */}
@@ -25,6 +28,9 @@ export function Hero() {
           src={heroDesktop}
           alt="Arreglos florales funerarios en Lima, coronas y lágrimas para condolencias - Florería Miguel Flores"
           className="max-h-full max-w-full w-auto h-auto object-contain"
+          width={2752}
+          height={1536}
+          fetchPriority="high"
         />
       </div>
 

@@ -47,7 +47,7 @@ export function Contact() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-medium text-white transition-transform hover:scale-105 w-full md:w-auto"
-            style={{ backgroundColor: "#25D366", minHeight: 52 }}
+            style={{ backgroundColor: "#1A9E4A", minHeight: 52 }}
           >
             <WhatsAppIcon size={20} />
             <span>Escríbenos por WhatsApp</span>
@@ -58,6 +58,8 @@ export function Contact() {
             src={contactImage}
             alt="Atención 24 horas - Florería Miguel Flores"
             className="w-full h-auto max-h-[500px] object-contain"
+            width={800}
+            height={800}
           />
         </div>
       </div>
