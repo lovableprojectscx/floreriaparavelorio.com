@@ -1,8 +1,8 @@
 {
-  "buildCommand": "NITRO_PRESET=vercel npm run build",
-  "outputDirectory": ".output/public",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/client",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/_server" }
+    { "source": "/(.*)", "destination": "/api/server" }
   ],
   "headers": [
     {
