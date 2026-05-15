@@ -2,6 +2,7 @@ import { Phone, Clock, MapPin } from "lucide-react";
 import { WhatsAppIcon } from "./WhatsAppIcon";
 import { useBusinessSettings } from "@/lib/SettingsContext";
 import contactImage from "@/assets/contact.webp";
+import contactImage400 from "@/assets/contact-400.webp";
 
 function waLink(phone: string, text?: string) {
   const num = phone.replace(/\D/g, "");
@@ -47,7 +48,7 @@ export function Contact() {
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-medium text-white transition-transform hover:scale-105 w-full md:w-auto"
-            style={{ backgroundColor: "#1A9E4A", minHeight: 52 }}
+            style={{ backgroundColor: "#0E7A3D", minHeight: 52 }}
           >
             <WhatsAppIcon size={20} />
             <span>Escríbenos por WhatsApp</span>
@@ -55,11 +56,14 @@ export function Contact() {
         </div>
         <div className="relative flex justify-center items-center overflow-hidden rounded-sm bg-[#0a0a0a]">
           <img
-            src={contactImage}
+            src={contactImage400}
+            srcSet={`${contactImage400} 400w, ${contactImage} 800w`}
+            sizes="(min-width: 768px) 50vw, 100vw"
             alt="Atención 24 horas - Florería Miguel Flores"
             className="w-full h-auto max-h-[500px] object-contain"
-            width={800}
-            height={800}
+            width={400}
+            height={400}
+            loading="lazy"
           />
         </div>
       </div>

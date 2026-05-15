@@ -60,7 +60,7 @@
   --border: #2A2A2A;
   --input: #2A2A2A;
   --ring: #8B6914;
-  --whatsapp: #1A9E4A; /* oscurecido para pasar contraste WCAG AA (ratio >4.5:1 con blanco) */
+  --whatsapp: #0E7A3D; /* verde oscuro, ratio 5.43:1 con blanco — cumple WCAG AA */
 }
 
 @layer base {

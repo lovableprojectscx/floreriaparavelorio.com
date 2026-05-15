@@ -100,13 +100,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://llasbukvdjlvwlgofgke.supabase.co", crossOrigin: "anonymous" },
-      // Google Fonts cargadas de forma no bloqueante (media print -> all onload)
+      // Google Fonts con display=swap — no bloquea FCP, el texto se muestra con fuente del sistema mientras carga
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap",
-        media: "print",
-        // @ts-expect-error onload no es un atributo estándar de link pero funciona en HTML
-        onload: "this.media='all'",
       },
       { rel: "icon", type: "image/webp", href: faviconUrl },
       { rel: "sitemap", type: "application/xml", href: "https://miguelflores.idenza.site/sitemap.xml" },
@@ -127,13 +124,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="es">
       <head>
         <HeadContent />
-        {/* Fallback para navegadores sin JS: carga fuentes normalmente */}
-        <noscript>
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
-          />
-        </noscript>
       </head>
       <body>
         {children}

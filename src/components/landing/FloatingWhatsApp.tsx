@@ -13,7 +13,7 @@ export function FloatingWhatsApp() {
       rel="noopener noreferrer"
       aria-label="Escribir por WhatsApp"
       className="fixed bottom-6 right-6 z-50 flex items-center justify-center rounded-full text-white wa-pulse hover:scale-110 transition-transform"
-      style={{ backgroundColor: "#1A9E4A", width: 56, height: 56 }}
+      style={{ backgroundColor: "#0E7A3D", width: 56, height: 56 }}
     >
       <WhatsAppIcon size={28} />
     </a>

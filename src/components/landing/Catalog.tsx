@@ -31,7 +31,7 @@ export function Catalog() {
               </div>
             ))
           ) : (
-            products.map((p) => (
+            products.map((p, i) => (
             <article key={p.slug} className="group">
               <div
                 className="aspect-[4/5] w-full overflow-hidden mb-3 md:mb-5"
@@ -40,7 +40,8 @@ export function Catalog() {
                 <img
                   src={p.image}
                   alt={`Arreglo floral para velorio ${p.name} - Delivery en Lima`}
-                  loading="lazy"
+                  loading={i < 2 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : "auto"}
                   className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                 />
               </div>
