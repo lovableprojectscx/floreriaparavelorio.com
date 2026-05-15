@@ -1,0 +1,21 @@
+# Florería Miguel Flores — robots.txt
+# https://miguelflores.idenza.site
+
+User-agent: *
+Allow: /
+Allow: /catalogo
+
+# Bloquear el panel de administración a todos los bots
+Disallow: /admin
+Disallow: /login
+
+# Bloquear rutas internas de TanStack/Vite que no deben indexarse
+Disallow: /_server
+Disallow: /_build
+Disallow: /api/
+
+# Sitemap para buscadores
+Sitemap: https://miguelflores.idenza.site/sitemap.xml
+
+# Crawl delay (respetuoso con los servidores)
+Crawl-delay: 5
