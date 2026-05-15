@@ -1,10 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { waLink } from "./constants";
-import { products as localProducts, formatPrice } from "./products";
+import { formatPrice, type Product } from "./products";
 import { useProducts } from "@/lib/useProducts";
 
-export function Catalog() {
-  const { products, loading } = useProducts();
+interface CatalogProps {
+  /** Productos precargados desde SSR — evitan el loading state y mejoran LCP */
+  initialProducts?: Product[];
+}
+
+export function Catalog({ initialProducts }: CatalogProps) {
+  const { products: clientProducts, loading } = useProducts();
+  // Si vienen productos del servidor, usarlos directamente (sin spinner)
+  const products = initialProducts && initialProducts.length > 0 ? initialProducts : clientProducts;
 
   return (
     <section id="catalogo" className="w-full bg-background py-20 md:py-28">
@@ -22,7 +29,7 @@ export function Catalog() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
-          {loading ? (
+          {loading && products.length === 0 ? (
             Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="animate-pulse">
                 <div className="aspect-[4/5] bg-neutral-900 mb-4" />

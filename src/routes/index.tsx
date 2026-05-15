@@ -1,5 +1,6 @@
 import React from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { Header } from "@/components/landing/Header";
 import { Hero } from "@/components/landing/Hero";
 import { TrustBar } from "@/components/landing/TrustBar";
@@ -8,8 +9,41 @@ import { Empathy } from "@/components/landing/Empathy";
 import { Contact } from "@/components/landing/Contact";
 import { Footer } from "@/components/landing/Footer";
 import { FloatingWhatsApp } from "@/components/landing/FloatingWhatsApp";
+import type { Product } from "@/components/landing/products";
+
+const TENANT_ID = "54a66b4a-6181-4b3f-b173-6398d0f33b2d";
+
+// Server function: corre en servidor, no en cliente
+const fetchProductsSSR = createServerFn({ method: "GET" }).handler(async () => {
+  const { createClient } = await import("@supabase/supabase-js");
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_PUBLISHABLE_KEY!,
+  );
+  const { data } = await supabase
+    .from("products")
+    .select("id, title, price, image, category")
+    .eq("tenant_id", TENANT_ID)
+    .order("created_at", { ascending: false })
+    .limit(8);
+
+  if (!data) return [] as Product[];
+  return data.map((p) => ({
+    id: p.id,
+    slug: p.id,
+    name: p.title || "Producto sin nombre",
+    price: Number(p.price) || 0,
+    image: p.image || "",
+    category: p.category?.[0] || "Arreglos",
+  })) as Product[];
+});
 
 export const Route = createFileRoute("/")({
+  // loader corre en servidor antes de renderizar — los productos llegan en el HTML inicial
+  loader: async () => {
+    const products = await fetchProductsSSR();
+    return { products };
+  },
   component: Index,
   head: () => ({
     meta: [
@@ -74,13 +108,14 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { products } = Route.useLoaderData();
   return (
     <>
       <Header />
       <main>
         <Hero />
         <TrustBar />
-        <Catalog />
+        <Catalog initialProducts={products} />
         <Empathy />
         <Contact />
       </main>
