@@ -2,10 +2,10 @@
 @source "../src";
 @import "tw-animate-css";
 /* Fuentes autoalojadas — eliminan la dependencia de Google Fonts (750ms bloqueantes) */
-@import "@fontsource-variable/inter/latin.css";
-@import "@fontsource/playfair-display/latin-400.css";
-@import "@fontsource/playfair-display/latin-700.css";
-@import "@fontsource/playfair-display/latin-400-italic.css";
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource/playfair-display/400.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/playfair-display/400-italic.css";
 
 @custom-variant dark (&:is(.dark *));
 
