@@ -75,7 +75,7 @@ export const Route = createFileRoute("/")({
       // Open Graph
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "es_PE" },
-      { property: "og:url", content: "https://miguelflores.idenza.site" },
+      { property: "og:url", content: "https://www.floreriaparavelorio.com" },
       { property: "og:title", content: "Miguel Flores | Arreglos Funerarios Lima – Delivery 24h" },
       {
         property: "og:description",
@@ -87,7 +87,7 @@ export const Route = createFileRoute("/")({
       { name: "twitter:description", content: "Delivery de arreglos florales para velorio en Lima y Callao. Atención 24 horas." },
     ],
     links: [
-      { rel: "canonical", href: "https://miguelflores.idenza.site" },
+      { rel: "canonical", href: "https://www.floreriaparavelorio.com" },
     ],
     scripts: [
       {
@@ -96,10 +96,10 @@ export const Route = createFileRoute("/")({
           "@context": "https://schema.org",
           "@type": ["LocalBusiness", "Florist"],
           name: "Florería Miguel Flores",
-          image: "https://miguelflores.idenza.site/og-image.png",
+          image: "https://www.floreriaparavelorio.com/og-image.png",
           description: "Especialistas en arreglos florales para velorio. Coronas, cruces y lágrimas con delivery el mismo día en Lima y Callao.",
           telephone: "+51994068553",
-          url: "https://miguelflores.idenza.site",
+          url: "https://www.floreriaparavelorio.com",
           address: {
             "@type": "PostalAddress",
             addressLocality: "Lima Metropolitana",
@@ -142,11 +142,19 @@ function Index() {
   const handleAdClick = () => {
     if (!settings) return;
     if (settings.ad_link) {
-      window.open(settings.ad_link, "_blank");
+      // Validar que el enlace sea una URL absoluta segura (evitar javascript: y open redirect)
+      try {
+        const url = new URL(settings.ad_link);
+        if (url.protocol === "https:" || url.protocol === "http:") {
+          window.open(url.href, "_blank", "noopener,noreferrer");
+        }
+      } catch {
+        // URL inválida — ignorar silenciosamente
+      }
     } else {
       const phone = (settings.whatsapp || "51994068553").replace(/\D/g, "");
       const msg = encodeURIComponent(settings.ad_message || "Hola, me interesa este producto.");
-      window.open(`https://wa.me/${phone}?text=${msg}`, "_blank");
+      window.open(`https://wa.me/${phone}?text=${msg}`, "_blank", "noopener,noreferrer");
     }
     handleCloseAd();
   };

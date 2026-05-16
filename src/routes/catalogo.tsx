@@ -23,10 +23,10 @@ export const Route = createFileRoute("/catalogo")({
         property: "og:description",
         content: "Coronas, cruces y ramos para velorio con delivery el mismo día en Lima y Callao. Atención 24 horas.",
       },
-      { property: "og:url", content: "https://miguelflores.idenza.site/catalogo" },
+      { property: "og:url", content: "https://www.floreriaparavelorio.com/catalogo" },
       { property: "og:type", content: "website" },
     ],
-    links: [{ rel: "canonical", href: "https://miguelflores.idenza.site/catalogo" }],
+    links: [{ rel: "canonical", href: "https://www.floreriaparavelorio.com/catalogo" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/catalogo")({
           "@type": "CollectionPage",
           name: "Catálogo de Arreglos Funerarios | Miguel Flores",
           description: "Catálogo completo de coronas, cruces y arreglos para velorio con delivery en Lima.",
-          url: "https://miguelflores.idenza.site/catalogo",
+          url: "https://www.floreriaparavelorio.com/catalogo",
           publisher: {
             "@type": "LocalBusiness",
             name: "Florería Miguel Flores"

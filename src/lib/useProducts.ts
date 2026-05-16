@@ -4,9 +4,20 @@ import type { Product } from "@/components/landing/products";
 
 const TENANT_ID = import.meta.env.VITE_TENANT_ID || "54a66b4a-6181-4b3f-b173-6398d0f33b2d";
 
-export function useProducts() {
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  tenant_id: string;
+  created_at: string;
+}
+
+/**
+ * @param skip - Pasar `false` para no hacer fetch al montar (ej. cuando SSR ya cargó los productos)
+ */
+export function useProducts(skip?: boolean) {
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(skip === false ? false : true);
 
   const fetchProducts = async () => {
     try {
@@ -16,7 +27,7 @@ export function useProducts() {
         .select("*")
         .eq("tenant_id", TENANT_ID)
         .order("created_at", { ascending: false });
-      
+
       if (!error && data) {
         setProducts(data.map((p) => ({
           id: p.id,
@@ -25,6 +36,7 @@ export function useProducts() {
           price: Number(p.price) || 0,
           image: p.image || "/placeholder.svg",
           category: p.category && p.category.length > 0 ? p.category[0] : "Arreglos",
+          description: p.description || "",
         })));
       } else if (error) {
         console.error("Error fetching products:", error);
@@ -35,6 +47,8 @@ export function useProducts() {
   };
 
   useEffect(() => {
+    // No hacer fetch si se indica explícitamente que se salte (productos vienen del SSR)
+    if (skip === false) return;
     fetchProducts();
   }, []);
 

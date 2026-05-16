@@ -7,11 +7,17 @@ export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
+// Máximo de intentos fallidos antes de bloquear temporalmente
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 5 * 60 * 1000; // 5 minutos
+
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" } | null>(null);
+  const [attempts, setAttempts] = useState(0);
+  const [lockedUntil, setLockedUntil] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,25 +34,41 @@ function LoginPage() {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
+  const isLocked = lockedUntil !== null && Date.now() < lockedUntil;
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (isLocked) {
+      const remaining = Math.ceil((lockedUntil! - Date.now()) / 1000 / 60);
+      setMessage({ text: `Demasiados intentos. Espera ${remaining} min antes de volver a intentar.`, type: "error" });
+      return;
+    }
+
     setLoading(true);
     setMessage(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
 
       if (error) throw error;
-      // No message needed on success as the auth listener will redirect
+
+      // Éxito: resetear contador
+      setAttempts(0);
+      setLockedUntil(null);
     } catch (error: any) {
-      console.error(error);
-      setMessage({
-        text: "Correo o contraseña incorrectos.",
-        type: "error",
-      });
+      const newAttempts = attempts + 1;
+      setAttempts(newAttempts);
+
+      if (newAttempts >= MAX_ATTEMPTS) {
+        setLockedUntil(Date.now() + LOCKOUT_MS);
+        setMessage({ text: "Demasiados intentos fallidos. Acceso bloqueado por 5 minutos.", type: "error" });
+      } else {
+        setMessage({
+          text: `Correo o contraseña incorrectos. ${MAX_ATTEMPTS - newAttempts} intento(s) restante(s).`,
+          type: "error",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -76,6 +98,7 @@ function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="tu@correo.com"
+              autoComplete="email"
               className="w-full bg-[#0E0E0E] text-[#F0EBE3] px-4 py-3 text-sm outline-none transition-colors border"
               style={{ borderColor: "#1F1F1F" }}
             />
@@ -91,6 +114,7 @@ function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
+              autoComplete="current-password"
               className="w-full bg-[#0E0E0E] text-[#F0EBE3] px-4 py-3 text-sm outline-none transition-colors border"
               style={{ borderColor: "#1F1F1F" }}
             />
@@ -104,12 +128,12 @@ function LoginPage() {
 
           <button
             type="submit"
-            disabled={loading || !email || !password}
+            disabled={loading || !email || !password || isLocked}
             className="w-full py-3 mt-4 text-xs uppercase tracking-[0.2em] font-medium transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
             style={{ backgroundColor: "#C9A84C", color: "#0A0A0A" }}
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
-            {loading ? "Iniciando..." : "Iniciar Sesión"}
+            {loading ? "Iniciando..." : isLocked ? "Bloqueado" : "Iniciar Sesión"}
           </button>
         </form>
       </div>

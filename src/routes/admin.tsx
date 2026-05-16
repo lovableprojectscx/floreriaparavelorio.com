@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {
   Plus, Pencil, Trash2, Upload, X, Search, Package, Tag, Building2, LogOut, Megaphone
 } from "lucide-react";
-import { products as seedProducts, formatPrice, type Product } from "@/components/landing/products";
+import { type Product } from "@/components/landing/products";
 import { supabase } from "@/lib/supabase";
 import { useProducts, useCategories, useSettings } from "@/lib/useProducts";
 
@@ -752,12 +752,13 @@ function AdvertisingPanel() {
         </Field>
 
         <Field label="Enlace alternativo (Opcional)">
-          <input 
-            value={data.ad_link} onChange={(e) => setData({ ...data, ad_link: e.target.value })} 
-            className="form-input" placeholder="https://ejemplo.com" 
+          <input
+            value={data.ad_link} onChange={(e) => setData({ ...data, ad_link: e.target.value })}
+            className="form-input" placeholder="https://ejemplo.com"
+            type="url"
           />
           <p className="text-[11px] mt-2" style={{ color: "#9A9087" }}>
-            Si colocas un enlace, al hacer clic en la imagen redirigirá aquí en lugar de ir a WhatsApp.
+            Si colocas un enlace, al hacer clic en la imagen redirigirá aquí en lugar de ir a WhatsApp. Debe comenzar con https://.
           </p>
         </Field>
 

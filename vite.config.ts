@@ -15,6 +15,13 @@ export default defineConfig({
   ],
   build: {
     sourcemap: false,
+    // Eliminar console.log en producción (console.error se mantiene para errores reales)
+    minify: "esbuild",
+    terserOptions: undefined,
+  },
+  esbuild: {
+    drop: ["debugger"],
+    pure: ["console.log"],
   },
   server: {
     port: 8080,

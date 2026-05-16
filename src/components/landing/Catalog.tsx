@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { waLink } from "./constants";
-import { formatPrice, type Product } from "./products";
+import { type Product } from "./products";
 import { useProducts } from "@/lib/useProducts";
 
 interface CatalogProps {
@@ -9,9 +9,10 @@ interface CatalogProps {
 }
 
 export function Catalog({ initialProducts }: CatalogProps) {
-  const { products: clientProducts, loading } = useProducts();
-  // Si vienen productos del servidor, usarlos directamente (sin spinner)
-  const products = initialProducts && initialProducts.length > 0 ? initialProducts : clientProducts;
+  // Solo hacer fetch del cliente si NO vienen productos del SSR (evita doble request)
+  const hasSSRProducts = initialProducts && initialProducts.length > 0;
+  const { products: clientProducts, loading } = useProducts(hasSSRProducts ? false : undefined);
+  const products = hasSSRProducts ? initialProducts : clientProducts;
 
   return (
     <section id="catalogo" className="w-full bg-background py-20 md:py-28">
