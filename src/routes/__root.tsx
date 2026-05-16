@@ -110,6 +110,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        src: "https://idenza.site/tracker.js",
+        "data-token": "ec8172d6cca43e515ece4167fc19a600bedc19385442a99c",
+        "data-org": "34194fe4-e82a-4fa1-b1b9-93790ae791ab",
+        defer: true,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,

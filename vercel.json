@@ -2,6 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/client",
   "rewrites": [
+    { "source": "/fonts/(.*)", "destination": "/fonts/$1" },
+    { "source": "/logo.webp", "destination": "/logo.webp" },
+    { "source": "/og-image.png", "destination": "/og-image.png" },
+    { "source": "/robots.txt", "destination": "/robots.txt" },
+    { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/(.*)", "destination": "/api/server" }
   ],
   "headers": [
