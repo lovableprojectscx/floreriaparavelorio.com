@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { waLink } from "./constants";
-import { type Product } from "./products";
+import { type Product, formatPrice } from "./products";
 import { useProducts } from "@/lib/useProducts";
+import { useBusinessSettings } from "@/lib/SettingsContext";
 
 interface CatalogProps {
   /** Productos precargados desde SSR — evitan el loading state y mejoran LCP */
@@ -13,6 +14,7 @@ export function Catalog({ initialProducts }: CatalogProps) {
   const hasSSRProducts = initialProducts && initialProducts.length > 0;
   const { products: clientProducts, loading } = useProducts(hasSSRProducts ? false : undefined);
   const products = hasSSRProducts ? initialProducts : clientProducts;
+  const { show_prices } = useBusinessSettings();
 
   return (
     <section id="catalogo" className="w-full bg-background py-20 md:py-28">
@@ -62,11 +64,19 @@ export function Catalog({ initialProducts }: CatalogProps) {
               <h3 className="font-display text-foreground text-base md:text-xl font-normal leading-tight">
                 {p.name}
               </h3>
+              <div className="mt-4 flex items-center justify-between gap-2">
+                {show_prices && p.price > 0 ? (
+                  <span className="text-sm font-semibold" style={{ color: "#C9A84C" }}>
+                    {formatPrice(p.price)}
+                  </span>
+                ) : (
+                  <span />
+                )}
                 <a
                   href={waLink(`Hola, me interesa consultar sobre: ${p.name}`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors whitespace-nowrap pb-1 inline-block"
+                  className="text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors whitespace-nowrap pb-0.5"
                   style={{
                     color: "#C9A84C",
                     borderBottom: "1px solid #8B6914",
@@ -74,6 +84,7 @@ export function Catalog({ initialProducts }: CatalogProps) {
                 >
                   Consultar
                 </a>
+              </div>
             </article>
           )))}
         </div>

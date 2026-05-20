@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown } from "lucide-react";
 import { Header } from "@/components/landing/Header";
 import { Footer } from "@/components/landing/Footer";
 import { FloatingWhatsApp } from "@/components/landing/FloatingWhatsApp";
 import { waLink } from "@/components/landing/constants";
 import { useProducts, useCategories } from "@/lib/useProducts";
+import { useBusinessSettings } from "@/lib/SettingsContext";
+import { formatPrice } from "@/components/landing/products";
 
 export const Route = createFileRoute("/catalogo")({
   component: CatalogPage,
@@ -49,8 +51,10 @@ export const Route = createFileRoute("/catalogo")({
 function CatalogPage() {
   const { products, loading: productsLoading } = useProducts();
   const { categories: dbCategories, loading: catsLoading } = useCategories();
+  const { show_prices } = useBusinessSettings();
   const loading = productsLoading || catsLoading;
   const [filter, setFilter] = useState<string>("Todos");
+  const [isOpen, setIsOpen] = useState(false);
   const filters = ["Todos", ...dbCategories.map((c) => c.name)];
   const visible = filter === "Todos" ? products : products.filter((p) => p.category === filter);
 
@@ -83,14 +87,15 @@ function CatalogPage() {
               </p>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-2 md:gap-3 mb-10 md:mb-14">
+            {/* Filtros para Escritorio (Desktop) */}
+            <div className="hidden md:flex flex-wrap justify-center gap-3 mb-14">
               {filters.map((f) => {
                 const active = f === filter;
                 return (
                   <button
                     key={f}
                     onClick={() => setFilter(f)}
-                    className="text-[11px] md:text-xs uppercase tracking-[0.25em] px-4 py-2 transition-colors min-h-[44px]"
+                    className="text-xs uppercase tracking-[0.25em] px-4 py-2 transition-colors min-h-[44px]"
                     style={{
                       color: active ? "#0A0A0A" : "#F0EBE3",
                       backgroundColor: active ? "#C9A84C" : "transparent",
@@ -101,6 +106,61 @@ function CatalogPage() {
                   </button>
                 );
               })}
+            </div>
+
+            {/* Filtro Desplegable para Móvil (Mobile Dropdown) */}
+            <div className="relative md:hidden mb-10 w-full max-w-xs mx-auto">
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full flex items-center justify-between px-4 py-3 text-xs uppercase tracking-[0.2em] transition-colors bg-[#0E0E0E]"
+                style={{
+                  color: "#F0EBE3",
+                  border: "1px solid #8B6914",
+                }}
+              >
+                <span>Filtrar: {filter}</span>
+                <ChevronDown 
+                  size={16} 
+                  className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} 
+                  style={{ color: "#C9A84C" }}
+                />
+              </button>
+
+              {isOpen && (
+                <>
+                  {/* Backdrop para cerrar al hacer clic fuera */}
+                  <div 
+                    className="fixed inset-0 z-10" 
+                    onClick={() => setIsOpen(false)} 
+                  />
+                  
+                  <ul 
+                    className="absolute left-0 right-0 mt-1.5 z-20 max-h-64 overflow-y-auto shadow-2xl transition-all border border-[#8B6914] no-scrollbar"
+                    style={{ backgroundColor: "#0E0E0E" }}
+                  >
+                    {filters.map((f) => {
+                      const active = f === filter;
+                      return (
+                        <li key={f}>
+                          <button
+                            onClick={() => {
+                              setFilter(f);
+                              setIsOpen(false);
+                            }}
+                            className="w-full text-left px-4 py-3 text-xs uppercase tracking-[0.2em] transition-colors border-b border-neutral-900 last:border-0"
+                            style={{
+                              color: active ? "#0A0A0A" : "#9A9087",
+                              backgroundColor: active ? "#C9A84C" : "transparent",
+                            }}
+                          >
+                            {f}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </>
+              )}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
@@ -135,11 +195,19 @@ function CatalogPage() {
                   <h2 className="font-display text-foreground text-base md:text-xl font-normal leading-tight">
                     {p.name}
                   </h2>
+                  <div className="mt-4 flex items-center justify-between gap-2">
+                    {show_prices && p.price > 0 ? (
+                      <span className="text-sm font-semibold" style={{ color: "#C9A84C" }}>
+                        {formatPrice(p.price)}
+                      </span>
+                    ) : (
+                      <span />
+                    )}
                     <a
                       href={waLink(`Hola, me interesa consultar sobre: ${p.name}`)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-4 text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors whitespace-nowrap pb-1 inline-block"
+                      className="text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors whitespace-nowrap pb-0.5"
                       style={{
                         color: "#C9A84C",
                         borderBottom: "1px solid #8B6914",
@@ -147,6 +215,7 @@ function CatalogPage() {
                     >
                       Consultar
                     </a>
+                  </div>
                 </article>
                 ))
               ) : (

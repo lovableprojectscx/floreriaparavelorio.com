@@ -11,12 +11,14 @@ interface BusinessSettings {
   whatsapp: string;
   schedule: string;
   zones: string;
+  show_prices: boolean;
 }
 
 const defaults: BusinessSettings = {
   whatsapp: "+51 994 068 553",
   schedule: "Lun a Dom · 24 horas",
   zones: "Lima Metropolitana, Callao, Ate, San Juan de Lurigancho, Comas, Los Olivos",
+  show_prices: true,
 };
 
 const SettingsContext = createContext<BusinessSettings>(defaults);
@@ -27,7 +29,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     supabase
       .from("tenant_settings")
-      .select("whatsapp, schedule, zones")
+      .select("whatsapp, schedule, zones, show_prices")
       .eq("tenant_id", TENANT_ID)
       .maybeSingle()
       .then(({ data }) => {
@@ -36,6 +38,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
             whatsapp: data.whatsapp || defaults.whatsapp,
             schedule: data.schedule || defaults.schedule,
             zones: data.zones || defaults.zones,
+            show_prices: data.show_prices !== false,
           });
         }
       });

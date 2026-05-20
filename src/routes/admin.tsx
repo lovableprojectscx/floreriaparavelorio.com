@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {
   Plus, Pencil, Trash2, Upload, X, Search, Package, Tag, Building2, LogOut, Megaphone
 } from "lucide-react";
-import { type Product } from "@/components/landing/products";
+import { type Product, formatPrice } from "@/components/landing/products";
 import { supabase } from "@/lib/supabase";
 import { useProducts, useCategories, useSettings } from "@/lib/useProducts";
 
@@ -263,7 +263,8 @@ function ProductsPanel() {
             </div>
             <div className="p-3 md:p-4 flex-1 flex flex-col">
               <p className="text-[8px] md:text-[10px] uppercase mb-1" style={{ color: "#9A9087", letterSpacing: "0.25em" }}>{p.category}</p>
-              <h3 className="font-display text-xs md:text-base leading-tight mb-3 line-clamp-1 md:line-clamp-2">{p.name}</h3>
+              <h3 className="font-display text-xs md:text-base leading-tight mb-1 line-clamp-1 md:line-clamp-2">{p.name}</h3>
+              <p className="text-xs md:text-sm font-medium mb-3" style={{ color: "#C9A84C" }}>{formatPrice(p.price)}</p>
               <div className="mt-auto flex gap-1.5">
                 <button 
                   onClick={() => openEdit(p)} 
@@ -325,6 +326,15 @@ function ProductsPanel() {
             )}
           </Field>
           <Field label="Nombre"><input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} className="form-input" placeholder="Corona Rosa y Blanca" /></Field>
+          <Field label="Precio (S/)">
+            <input 
+              type="number" 
+              value={editing.price || ""} 
+              onChange={(e) => setEditing({ ...editing, price: Number(e.target.value) })} 
+              className="form-input" 
+              placeholder="350" 
+            />
+          </Field>
           <Field label="Categoría">
             <select value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} className="form-input">
               {categories.map((c) => (
@@ -552,6 +562,7 @@ function BusinessPanel() {
     whatsapp: "+51 994 068 553",
     schedule: "Lun a Dom · 24 horas",
     zones: "Lima Metropolitana, Callao, Ate, San Juan de Lurigancho, Comas, Los Olivos",
+    show_prices: true,
   });
   const [saved, setSaved] = useState(false);
 
@@ -561,6 +572,7 @@ function BusinessPanel() {
         whatsapp: settings.whatsapp || "+51 994 068 553",
         schedule: settings.schedule || "Lun a Dom · 24 horas",
         zones: settings.zones || "Lima Metropolitana, Callao, Ate, San Juan de Lurigancho, Comas, Los Olivos",
+        show_prices: settings.show_prices !== false,
       });
     }
   }, [loading, settings]);
@@ -576,6 +588,23 @@ function BusinessPanel() {
       <SectionHeader eyebrow="Configuración" title="Datos del negocio" />
 
       <div className="space-y-6">
+        <div className="flex items-center justify-between p-4 rounded-md mb-2" style={{ backgroundColor: data.show_prices ? "rgba(201, 168, 76, 0.1)" : "#0E0E0E", border: "1px solid", borderColor: data.show_prices ? "#C9A84C" : "#1A1A1A" }}>
+          <div>
+            <p className="font-medium text-sm" style={{ color: data.show_prices ? "#C9A84C" : "#9A9087" }}>
+              {data.show_prices ? "Precios Visibles en Tienda" : "Precios Ocultos en Tienda"}
+            </p>
+            <p className="text-[10px] uppercase tracking-[0.1em] mt-1" style={{ color: "#5C5750" }}>
+              {data.show_prices ? "Los clientes pueden ver los precios de los productos." : "Los precios están ocultos (se muestra el botón Consultar)."}
+            </p>
+          </div>
+          <button 
+            onClick={() => setData({ ...data, show_prices: !data.show_prices })}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${data.show_prices ? 'bg-[#C9A84C]' : 'bg-[#2A2A2A]'}`}
+          >
+            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${data.show_prices ? 'translate-x-6' : 'translate-x-1'}`} />
+          </button>
+        </div>
+
         <Field label="Número de WhatsApp">
           <input value={data.whatsapp} onChange={(e) => setData({ ...data, whatsapp: e.target.value })} className="form-input" placeholder="+51 999 999 999" />
           <p className="text-[11px] mt-2" style={{ color: "#9A9087" }}>

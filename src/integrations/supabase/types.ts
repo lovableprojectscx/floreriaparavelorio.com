@@ -98,37 +98,79 @@ export type Database = {
       }
       reservations: {
         Row: {
+          address: string | null
           created_at: string
           date: string
+          dedication: string | null
+          delivery_date: string | null
+          delivery_fee: number | null
+          district: string | null
+          for_name: string | null
+          from_name: string | null
           id: string
+          items: Json | null
           message: string | null
           name: string
+          payment_method: string | null
           phone: string
+          receipt_url: string | null
+          receiver_phone: string | null
+          reference: string | null
           status: string
           tenant_id: string
           time_slot: string | null
+          total: number | null
+          tracking_code: string | null
         }
         Insert: {
+          address?: string | null
           created_at?: string
           date: string
+          dedication?: string | null
+          delivery_date?: string | null
+          delivery_fee?: number | null
+          district?: string | null
+          for_name?: string | null
+          from_name?: string | null
           id?: string
+          items?: Json | null
           message?: string | null
           name: string
+          payment_method?: string | null
           phone: string
+          receipt_url?: string | null
+          receiver_phone?: string | null
+          reference?: string | null
           status?: string
           tenant_id: string
           time_slot?: string | null
+          total?: number | null
+          tracking_code?: string | null
         }
         Update: {
+          address?: string | null
           created_at?: string
           date?: string
+          dedication?: string | null
+          delivery_date?: string | null
+          delivery_fee?: number | null
+          district?: string | null
+          for_name?: string | null
+          from_name?: string | null
           id?: string
+          items?: Json | null
           message?: string | null
           name?: string
+          payment_method?: string | null
           phone?: string
+          receipt_url?: string | null
+          receiver_phone?: string | null
+          reference?: string | null
           status?: string
           tenant_id?: string
           time_slot?: string | null
+          total?: number | null
+          tracking_code?: string | null
         }
         Relationships: [
           {
@@ -142,33 +184,57 @@ export type Database = {
       }
       tenant_settings: {
         Row: {
+          ad_active: boolean | null
           ad_image_url: string | null
           ad_link: string | null
           ad_message: string | null
+          bcp_account: string | null
+          plin_enabled: boolean | null
           schedule: string | null
+          show_prices: boolean
+          store_name: string | null
           tenant_id: string
           updated_at: string
           whatsapp: string | null
+          yape_holder_name: string | null
+          yape_number: string | null
+          yape_qr_url: string | null
           zones: string | null
         }
         Insert: {
+          ad_active?: boolean | null
           ad_image_url?: string | null
           ad_link?: string | null
           ad_message?: string | null
+          bcp_account?: string | null
+          plin_enabled?: boolean | null
           schedule?: string | null
+          show_prices?: boolean
+          store_name?: string | null
           tenant_id: string
           updated_at?: string
           whatsapp?: string | null
+          yape_holder_name?: string | null
+          yape_number?: string | null
+          yape_qr_url?: string | null
           zones?: string | null
         }
         Update: {
+          ad_active?: boolean | null
           ad_image_url?: string | null
           ad_link?: string | null
           ad_message?: string | null
+          bcp_account?: string | null
+          plin_enabled?: boolean | null
           schedule?: string | null
+          show_prices?: boolean
+          store_name?: string | null
           tenant_id?: string
           updated_at?: string
           whatsapp?: string | null
+          yape_holder_name?: string | null
+          yape_number?: string | null
+          yape_qr_url?: string | null
           zones?: string | null
         }
         Relationships: [

@@ -146,6 +146,7 @@ export function useSettings() {
     ad_message: "Hola, me interesa este producto.",
     ad_link: "",
     ad_active: true,
+    show_prices: true,
   });
   const [loading, setLoading] = useState(true);
 
@@ -166,6 +167,7 @@ export function useSettings() {
         ad_message: data.ad_message || "",
         ad_link: data.ad_link || "",
         ad_active: data.ad_active !== false,
+        show_prices: data.show_prices !== false,
       });
     }
     setLoading(false);
@@ -185,6 +187,7 @@ export function useSettings() {
       ad_message: newSettings.ad_message,
       ad_link: newSettings.ad_link,
       ad_active: newSettings.ad_active,
+      show_prices: newSettings.show_prices,
       updated_at: new Date().toISOString()
     });
     if (!error) setSettings(newSettings);

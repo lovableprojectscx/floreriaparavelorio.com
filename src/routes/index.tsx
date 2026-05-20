@@ -47,7 +47,7 @@ const fetchSettingsSSR = createServerFn({ method: "GET" }).handler(async () => {
   );
   const { data } = await supabase
     .from("tenant_settings")
-    .select("whatsapp, ad_image_url, ad_message, ad_link, ad_active")
+    .select("whatsapp, ad_image_url, ad_message, ad_link, ad_active, show_prices")
     .eq("tenant_id", TENANT_ID)
     .single();
 
