@@ -310,7 +310,11 @@ function ProductsPanel() {
               ) : (
                 <div className="h-full flex flex-col items-center justify-center gap-2" style={{ color: "#9A9087" }}>
                   <Upload size={22} /><span className="text-[10px] uppercase tracking-[0.2em]">Subir foto</span>
-                  <span className="text-[10px] text-center px-4" style={{ color: "#5C5750" }}>Sin límite de tamaño · Se optimiza a WebP</span>
+                  <span className="text-[10px] text-center px-4 mt-1" style={{ color: "#5C5750", lineHeight: "1.4" }}>
+                    Recomendado: Vertical 4:5 (ej: 800x1000px)
+                    <br />
+                    Formatos: JPG, PNG o WebP
+                  </span>
                 </div>
               )}
               <input
