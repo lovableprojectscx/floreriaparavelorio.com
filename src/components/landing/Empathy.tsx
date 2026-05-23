@@ -13,7 +13,10 @@ export function Empathy() {
       className="relative w-full overflow-hidden"
       aria-label="En los momentos más difíciles, estamos aquí"
     >
-      <h2 className="sr-only">Envío urgente de flores para difuntos, condolencias y velatorios en Lima. Atención empática las 24 horas.</h2>
+      <h2 className="sr-only">
+        Envío urgente de flores para difuntos, condolencias y velatorios en Lima. Atención empática
+        las 24 horas.
+      </h2>
       <picture>
         <source media="(min-width: 768px)" srcSet={empathyDesktop} width={1920} height={1080} />
         {/* srcset responsive: 412w para mobile pequeño, 800w para tablets */}

@@ -1,7 +1,17 @@
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import {
-  Plus, Pencil, Trash2, Upload, X, Search, Package, Tag, Building2, LogOut, Megaphone
+  Plus,
+  Pencil,
+  Trash2,
+  Upload,
+  X,
+  Search,
+  Package,
+  Tag,
+  Building2,
+  LogOut,
+  Megaphone,
 } from "lucide-react";
 import { type Product, formatPrice } from "@/components/landing/products";
 import { supabase } from "@/lib/supabase";
@@ -28,7 +38,7 @@ const convertToWebP = (file: File): Promise<File> => {
           resolve(newFile);
         },
         "image/webp",
-        0.95 // 95% de calidad
+        0.95, // 95% de calidad
       );
     };
     img.onerror = () => {
@@ -41,7 +51,9 @@ const convertToWebP = (file: File): Promise<File> => {
 
 export const Route = createFileRoute("/admin")({
   beforeLoad: async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (!session) {
       throw redirect({ to: "/login" });
     }
@@ -69,18 +81,41 @@ function AdminPage() {
         style={{ borderColor: "#1A1A1A", backgroundColor: "#080808" }}
       >
         <div className="mb-10">
-          <p className="text-[10px] uppercase mb-1" style={{ color: "#C9A84C", letterSpacing: "0.3em" }}>
+          <p
+            className="text-[10px] uppercase mb-1"
+            style={{ color: "#C9A84C", letterSpacing: "0.3em" }}
+          >
             Panel
           </p>
           <h1 className="font-display text-xl">Administración</h1>
         </div>
         <nav className="space-y-1 flex-1">
-          <NavBtn icon={<Package size={15} />} label="Productos" active={tab === "productos"} onClick={() => setTab("productos")} />
-          <NavBtn icon={<Tag size={15} />} label="Categorías" active={tab === "categorias"} onClick={() => setTab("categorias")} />
-          <NavBtn icon={<Building2 size={15} />} label="Negocio" active={tab === "negocio"} onClick={() => setTab("negocio")} />
-          <NavBtn icon={<Megaphone size={15} />} label="Publicidad" active={tab === "publicidad"} onClick={() => setTab("publicidad")} />
+          <NavBtn
+            icon={<Package size={15} />}
+            label="Productos"
+            active={tab === "productos"}
+            onClick={() => setTab("productos")}
+          />
+          <NavBtn
+            icon={<Tag size={15} />}
+            label="Categorías"
+            active={tab === "categorias"}
+            onClick={() => setTab("categorias")}
+          />
+          <NavBtn
+            icon={<Building2 size={15} />}
+            label="Negocio"
+            active={tab === "negocio"}
+            onClick={() => setTab("negocio")}
+          />
+          <NavBtn
+            icon={<Megaphone size={15} />}
+            label="Publicidad"
+            active={tab === "publicidad"}
+            onClick={() => setTab("publicidad")}
+          />
         </nav>
-        
+
         <div className="mt-auto pt-10">
           <button
             onClick={handleLogout}
@@ -127,7 +162,17 @@ function AdminPage() {
   );
 }
 
-function NavBtn({ icon, label, active, onClick }: { icon: React.ReactNode; label: string; active: boolean; onClick: () => void }) {
+function NavBtn({
+  icon,
+  label,
+  active,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
   return (
     <button
       onClick={onClick}
@@ -143,11 +188,22 @@ function NavBtn({ icon, label, active, onClick }: { icon: React.ReactNode; label
   );
 }
 
-function SectionHeader({ eyebrow, title, action }: { eyebrow: string; title: string; action?: React.ReactNode }) {
+function SectionHeader({
+  eyebrow,
+  title,
+  action,
+}: {
+  eyebrow: string;
+  title: string;
+  action?: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
       <div>
-        <p className="text-[10px] uppercase mb-1" style={{ color: "#C9A84C", letterSpacing: "0.3em" }}>
+        <p
+          className="text-[10px] uppercase mb-1"
+          style={{ color: "#C9A84C", letterSpacing: "0.3em" }}
+        >
           {eyebrow}
         </p>
         <h2 className="font-display text-2xl">{title}</h2>
@@ -166,19 +222,22 @@ function ProductsPanel() {
   const [editing, setEditing] = useState<Partial<Product> | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
-  const filtered = items.filter((p) =>
-    p.name.toLowerCase().includes(query.toLowerCase()) || p.category.toLowerCase().includes(query.toLowerCase())
+  const filtered = items.filter(
+    (p) =>
+      p.name.toLowerCase().includes(query.toLowerCase()) ||
+      p.category.toLowerCase().includes(query.toLowerCase()),
   );
 
-  const openNew = () => setEditing({ slug: "", name: "", category: categories[0]?.name ?? "", price: 0, image: "" });
+  const openNew = () =>
+    setEditing({ slug: "", name: "", category: categories[0]?.name ?? "", price: 0, image: "" });
   const openEdit = (p: Product) => setEditing({ ...p });
 
   const save = async () => {
     if (!editing?.name || !editing?.category) return;
-    
+
     // Check if we're editing an existing product (it has an ID/slug)
     const exists = items.find((p) => p.slug === editing.slug);
-    
+
     if (exists && exists.slug) {
       await updateProduct(exists.slug, editing as Product);
     } else {
@@ -215,9 +274,7 @@ function ProductsPanel() {
       }
 
       // Get the permanent public URL
-      const { data } = supabase.storage
-        .from("product-images")
-        .getPublicUrl(filename);
+      const { data } = supabase.storage.from("product-images").getPublicUrl(filename);
 
       setEditing({ ...editing, image: data.publicUrl });
     } catch (err: any) {
@@ -243,10 +300,14 @@ function ProductsPanel() {
         }
       />
 
-      <div className="flex items-center gap-3 px-4 py-3 mb-6" style={{ backgroundColor: "#0E0E0E", border: "1px solid #1A1A1A" }}>
+      <div
+        className="flex items-center gap-3 px-4 py-3 mb-6"
+        style={{ backgroundColor: "#0E0E0E", border: "1px solid #1A1A1A" }}
+      >
         <Search size={16} style={{ color: "#9A9087" }} />
         <input
-          value={query} onChange={(e) => setQuery(e.target.value)}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           placeholder="Buscar por nombre o categoría…"
           className="flex-1 bg-transparent outline-none text-sm placeholder:text-[#5C5750]"
         />
@@ -257,26 +318,43 @@ function ProductsPanel() {
 
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-5">
         {filtered.map((p) => (
-          <article key={p.slug} className="group flex flex-col" style={{ backgroundColor: "#0E0E0E", border: "1px solid #1A1A1A" }}>
+          <article
+            key={p.slug}
+            className="group flex flex-col"
+            style={{ backgroundColor: "#0E0E0E", border: "1px solid #1A1A1A" }}
+          >
             <div className="aspect-[4/5] overflow-hidden" style={{ backgroundColor: "#0A0A0A" }}>
-              <img src={p.image} alt={p.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+              <img
+                src={p.image}
+                alt={p.name}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              />
             </div>
             <div className="p-3 md:p-4 flex-1 flex flex-col">
-              <p className="text-[8px] md:text-[10px] uppercase mb-1" style={{ color: "#9A9087", letterSpacing: "0.25em" }}>{p.category}</p>
-              <h3 className="font-display text-xs md:text-base leading-tight mb-1 line-clamp-1 md:line-clamp-2">{p.name}</h3>
-              <p className="text-xs md:text-sm font-medium mb-3" style={{ color: "#C9A84C" }}>{formatPrice(p.price)}</p>
+              <p
+                className="text-[8px] md:text-[10px] uppercase mb-1"
+                style={{ color: "#9A9087", letterSpacing: "0.25em" }}
+              >
+                {p.category}
+              </p>
+              <h3 className="font-display text-xs md:text-base leading-tight mb-1 line-clamp-1 md:line-clamp-2">
+                {p.name}
+              </h3>
+              <p className="text-xs md:text-sm font-medium mb-3" style={{ color: "#C9A84C" }}>
+                {formatPrice(p.price)}
+              </p>
               <div className="mt-auto flex gap-1.5">
-                <button 
-                  onClick={() => openEdit(p)} 
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 text-[8px] md:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.2em]" 
+                <button
+                  onClick={() => openEdit(p)}
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 text-[8px] md:text-[10px] uppercase tracking-[0.1em] md:tracking-[0.2em]"
                   style={{ border: "1px solid #2A2A2A", color: "#F0EBE3" }}
                 >
                   <Pencil size={11} /> <span className="hidden xs:inline">Editar</span>
                 </button>
-                <button 
-                  onClick={() => setConfirmDelete(p.slug)} 
-                  className="p-2 hover:opacity-80" 
-                  style={{ border: "1px solid #2A2A2A", color: "#C97070" }} 
+                <button
+                  onClick={() => setConfirmDelete(p.slug)}
+                  className="p-2 hover:opacity-80"
+                  style={{ border: "1px solid #2A2A2A", color: "#C97070" }}
                   aria-label="Eliminar"
                 >
                   <Trash2 size={12} className="md:w-3.5 md:h-3.5" />
@@ -288,7 +366,11 @@ function ProductsPanel() {
       </div>
 
       {editing && (
-        <Drawer title={items.find((p) => p.slug === editing.slug) ? "Editar producto" : "Nuevo producto"} onClose={() => setEditing(null)} onSave={save}>
+        <Drawer
+          title={items.find((p) => p.slug === editing.slug) ? "Editar producto" : "Nuevo producto"}
+          onClose={() => setEditing(null)}
+          onSave={save}
+        >
           <Field label="Foto">
             <label
               className={`block aspect-[4/5] overflow-hidden relative group ${uploading ? "cursor-wait opacity-70" : "cursor-pointer"}`}
@@ -297,20 +379,43 @@ function ProductsPanel() {
               {editing.image && !uploading ? (
                 <>
                   <img src={editing.image} alt="" className="h-full w-full object-cover" />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                  <div
+                    className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+                  >
                     <Upload size={20} style={{ color: "#C9A84C" }} />
-                    <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "#F0EBE3" }}>Cambiar foto</span>
+                    <span
+                      className="text-[10px] uppercase tracking-[0.2em]"
+                      style={{ color: "#F0EBE3" }}
+                    >
+                      Cambiar foto
+                    </span>
                   </div>
                 </>
               ) : uploading ? (
-                <div className="h-full flex flex-col items-center justify-center gap-3" style={{ color: "#C9A84C" }}>
+                <div
+                  className="h-full flex flex-col items-center justify-center gap-3"
+                  style={{ color: "#C9A84C" }}
+                >
                   <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                  <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "#9A9087" }}>Subiendo imagen…</span>
+                  <span
+                    className="text-[10px] uppercase tracking-[0.2em]"
+                    style={{ color: "#9A9087" }}
+                  >
+                    Subiendo imagen…
+                  </span>
                 </div>
               ) : (
-                <div className="h-full flex flex-col items-center justify-center gap-2" style={{ color: "#9A9087" }}>
-                  <Upload size={22} /><span className="text-[10px] uppercase tracking-[0.2em]">Subir foto</span>
-                  <span className="text-[10px] text-center px-4 mt-1" style={{ color: "#5C5750", lineHeight: "1.4" }}>
+                <div
+                  className="h-full flex flex-col items-center justify-center gap-2"
+                  style={{ color: "#9A9087" }}
+                >
+                  <Upload size={22} />
+                  <span className="text-[10px] uppercase tracking-[0.2em]">Subir foto</span>
+                  <span
+                    className="text-[10px] text-center px-4 mt-1"
+                    style={{ color: "#5C5750", lineHeight: "1.4" }}
+                  >
                     Recomendado: Vertical 4:5 (ej: 800x1000px)
                     <br />
                     Formatos: JPG, PNG o WebP
@@ -326,35 +431,60 @@ function ProductsPanel() {
               />
             </label>
             {uploadError && (
-              <p className="text-xs mt-2" style={{ color: "#F0AFA0" }}>⚠ {uploadError}</p>
+              <p className="text-xs mt-2" style={{ color: "#F0AFA0" }}>
+                ⚠ {uploadError}
+              </p>
             )}
           </Field>
-          <Field label="Nombre"><input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} className="form-input" placeholder="Corona Rosa y Blanca" /></Field>
+          <Field label="Nombre">
+            <input
+              value={editing.name}
+              onChange={(e) => setEditing({ ...editing, name: e.target.value })}
+              className="form-input"
+              placeholder="Corona Rosa y Blanca"
+            />
+          </Field>
           <Field label="Precio (S/)">
-            <input 
-              type="number" 
-              value={editing.price || ""} 
-              onChange={(e) => setEditing({ ...editing, price: Number(e.target.value) })} 
-              className="form-input" 
-              placeholder="350" 
+            <input
+              type="number"
+              value={editing.price || ""}
+              onChange={(e) => setEditing({ ...editing, price: Number(e.target.value) })}
+              className="form-input"
+              placeholder="350"
             />
           </Field>
           <Field label="Categoría">
-            <select value={editing.category} onChange={(e) => setEditing({ ...editing, category: e.target.value })} className="form-input">
+            <select
+              value={editing.category}
+              onChange={(e) => setEditing({ ...editing, category: e.target.value })}
+              className="form-input"
+            >
               {categories.map((c) => (
-                <option key={c.id} value={c.name}>{c.name}</option>
+                <option key={c.id} value={c.name}>
+                  {c.name}
+                </option>
               ))}
               {categories.length === 0 && <option value="Arreglos">Arreglos</option>}
             </select>
           </Field>
           <Field label="Descripción">
-            <textarea value={editing.description} onChange={(e) => setEditing({ ...editing, description: e.target.value })} rows={4} className="form-input resize-none" placeholder="Detalle del arreglo, flores, tamaño…" />
+            <textarea
+              value={editing.description}
+              onChange={(e) => setEditing({ ...editing, description: e.target.value })}
+              rows={4}
+              className="form-input resize-none"
+              placeholder="Detalle del arreglo, flores, tamaño…"
+            />
           </Field>
         </Drawer>
       )}
 
       {confirmDelete && (
-        <ConfirmModal title="Eliminar producto" onCancel={() => setConfirmDelete(null)} onConfirm={() => remove(confirmDelete)} />
+        <ConfirmModal
+          title="Eliminar producto"
+          onCancel={() => setConfirmDelete(null)}
+          onConfirm={() => remove(confirmDelete)}
+        />
       )}
     </div>
   );
@@ -363,7 +493,13 @@ function ProductsPanel() {
 /* ───────────────────────── CATEGORÍAS ───────────────────────── */
 
 function CategoriesPanel() {
-  const { categories: cats, loading, error: fetchError, addCategory, deleteCategory } = useCategories();
+  const {
+    categories: cats,
+    loading,
+    error: fetchError,
+    addCategory,
+    deleteCategory,
+  } = useCategories();
   const { products } = useProducts();
   const [showModal, setShowModal] = useState(false);
   const [newName, setNewName] = useState("");
@@ -428,36 +564,53 @@ function CategoriesPanel() {
       />
 
       {fetchError && (
-        <div className="mb-4 px-4 py-3 text-sm" style={{ backgroundColor: "#2A1010", border: "1px solid #7A1F1F", color: "#F0AFA0" }}>
+        <div
+          className="mb-4 px-4 py-3 text-sm"
+          style={{ backgroundColor: "#2A1010", border: "1px solid #7A1F1F", color: "#F0AFA0" }}
+        >
           ⚠ Error al cargar: {fetchError}
         </div>
       )}
       {saveError && (
-        <div className="mb-4 px-4 py-3 text-sm" style={{ backgroundColor: "#2A1010", border: "1px solid #7A1F1F", color: "#F0AFA0" }}>
+        <div
+          className="mb-4 px-4 py-3 text-sm"
+          style={{ backgroundColor: "#2A1010", border: "1px solid #7A1F1F", color: "#F0AFA0" }}
+        >
           ⚠ Error: {saveError}
         </div>
       )}
 
       {loading ? (
-        <p className="text-sm" style={{ color: "#9A9087" }}>Cargando...</p>
+        <p className="text-sm" style={{ color: "#9A9087" }}>
+          Cargando...
+        </p>
       ) : (
         <div style={{ border: "1px solid #1A1A1A" }}>
           {cats.length === 0 && (
-            <p className="px-5 py-6 text-sm" style={{ color: "#9A9087", backgroundColor: "#0E0E0E" }}>
+            <p
+              className="px-5 py-6 text-sm"
+              style={{ color: "#9A9087", backgroundColor: "#0E0E0E" }}
+            >
               Sin categorías aún. Crea la primera con el botón "Nueva categoría".
             </p>
           )}
           {cats.map((c, i) => {
-            const count = products.filter(p => p.category === c.name).length;
+            const count = products.filter((p) => p.category === c.name).length;
             return (
               <div
                 key={c.id}
                 className="flex items-center justify-between px-5 py-4"
-                style={{ borderTop: i === 0 ? "none" : "1px solid #1A1A1A", backgroundColor: "#0E0E0E" }}
+                style={{
+                  borderTop: i === 0 ? "none" : "1px solid #1A1A1A",
+                  backgroundColor: "#0E0E0E",
+                }}
               >
                 <div>
                   <p className="font-display text-base">{c.name}</p>
-                  <p className="text-[10px] uppercase tracking-[0.2em] mt-1" style={{ color: "#9A9087" }}>
+                  <p
+                    className="text-[10px] uppercase tracking-[0.2em] mt-1"
+                    style={{ color: "#9A9087" }}
+                  >
                     {count} {count === 1 ? "producto" : "productos"}
                   </p>
                 </div>
@@ -466,7 +619,11 @@ function CategoriesPanel() {
                   disabled={count > 0}
                   className="p-2 disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-80"
                   style={{ border: "1px solid #2A2A2A", color: "#C97070" }}
-                  title={count > 0 ? "Tiene productos asignados — no se puede eliminar" : "Eliminar categoría"}
+                  title={
+                    count > 0
+                      ? "Tiene productos asignados — no se puede eliminar"
+                      : "Eliminar categoría"
+                  }
                 >
                   <Trash2 size={14} />
                 </button>
@@ -494,13 +651,20 @@ function CategoriesPanel() {
           >
             <div className="flex items-center justify-between">
               <h3 className="font-display text-lg">Nueva categoría</h3>
-              <button onClick={closeModal} className="p-1 hover:opacity-70" style={{ color: "#9A9087" }}>
+              <button
+                onClick={closeModal}
+                className="p-1 hover:opacity-70"
+                style={{ color: "#9A9087" }}
+              >
                 <X size={18} />
               </button>
             </div>
 
             <div>
-              <label className="block text-[10px] uppercase tracking-[0.25em] mb-2" style={{ color: "#9A9087" }}>
+              <label
+                className="block text-[10px] uppercase tracking-[0.25em] mb-2"
+                style={{ color: "#9A9087" }}
+              >
                 Nombre de la categoría
               </label>
               <input
@@ -523,7 +687,9 @@ function CategoriesPanel() {
             </div>
 
             {saveError && (
-              <p className="text-sm" style={{ color: "#F0AFA0" }}>⚠ {saveError}</p>
+              <p className="text-sm" style={{ color: "#F0AFA0" }}>
+                ⚠ {saveError}
+              </p>
             )}
 
             <div className="flex gap-3">
@@ -575,7 +741,9 @@ function BusinessPanel() {
       setData({
         whatsapp: settings.whatsapp || "+51 994 068 553",
         schedule: settings.schedule || "Lun a Dom · 24 horas",
-        zones: settings.zones || "Lima Metropolitana, Callao, Ate, San Juan de Lurigancho, Comas, Los Olivos",
+        zones:
+          settings.zones ||
+          "Lima Metropolitana, Callao, Ate, San Juan de Lurigancho, Comas, Los Olivos",
         show_prices: settings.show_prices !== false,
       });
     }
@@ -592,38 +760,63 @@ function BusinessPanel() {
       <SectionHeader eyebrow="Configuración" title="Datos del negocio" />
 
       <div className="space-y-6">
-        <div className="flex items-center justify-between p-4 rounded-md mb-2" style={{ backgroundColor: data.show_prices ? "rgba(201, 168, 76, 0.1)" : "#0E0E0E", border: "1px solid", borderColor: data.show_prices ? "#C9A84C" : "#1A1A1A" }}>
+        <div
+          className="flex items-center justify-between p-4 rounded-md mb-2"
+          style={{
+            backgroundColor: data.show_prices ? "rgba(201, 168, 76, 0.1)" : "#0E0E0E",
+            border: "1px solid",
+            borderColor: data.show_prices ? "#C9A84C" : "#1A1A1A",
+          }}
+        >
           <div>
-            <p className="font-medium text-sm" style={{ color: data.show_prices ? "#C9A84C" : "#9A9087" }}>
+            <p
+              className="font-medium text-sm"
+              style={{ color: data.show_prices ? "#C9A84C" : "#9A9087" }}
+            >
               {data.show_prices ? "Precios Visibles en Tienda" : "Precios Ocultos en Tienda"}
             </p>
             <p className="text-[10px] uppercase tracking-[0.1em] mt-1" style={{ color: "#5C5750" }}>
-              {data.show_prices ? "Los clientes pueden ver los precios de los productos." : "Los precios están ocultos (se muestra el botón Consultar)."}
+              {data.show_prices
+                ? "Los clientes pueden ver los precios de los productos."
+                : "Los precios están ocultos (se muestra el botón Consultar)."}
             </p>
           </div>
-          <button 
+          <button
             onClick={() => setData({ ...data, show_prices: !data.show_prices })}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${data.show_prices ? 'bg-[#C9A84C]' : 'bg-[#2A2A2A]'}`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${data.show_prices ? "bg-[#C9A84C]" : "bg-[#2A2A2A]"}`}
           >
-            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${data.show_prices ? 'translate-x-6' : 'translate-x-1'}`} />
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${data.show_prices ? "translate-x-6" : "translate-x-1"}`}
+            />
           </button>
         </div>
 
         <Field label="Número de WhatsApp">
-          <input value={data.whatsapp} onChange={(e) => setData({ ...data, whatsapp: e.target.value })} className="form-input" placeholder="+51 999 999 999" />
+          <input
+            value={data.whatsapp}
+            onChange={(e) => setData({ ...data, whatsapp: e.target.value })}
+            className="form-input"
+            placeholder="+51 999 999 999"
+          />
           <p className="text-[11px] mt-2" style={{ color: "#9A9087" }}>
             Se usará en el botón flotante y todos los enlaces de contacto.
           </p>
         </Field>
 
         <Field label="Horario de atención">
-          <input value={data.schedule} onChange={(e) => setData({ ...data, schedule: e.target.value })} className="form-input" />
+          <input
+            value={data.schedule}
+            onChange={(e) => setData({ ...data, schedule: e.target.value })}
+            className="form-input"
+          />
         </Field>
 
         <Field label="Zonas de delivery">
           <textarea
-            value={data.zones} onChange={(e) => setData({ ...data, zones: e.target.value })}
-            rows={4} className="form-input resize-none"
+            value={data.zones}
+            onChange={(e) => setData({ ...data, zones: e.target.value })}
+            rows={4}
+            className="form-input resize-none"
             placeholder="Separadas por coma"
           />
         </Field>
@@ -689,9 +882,7 @@ function AdvertisingPanel() {
         return;
       }
 
-      const { data: urlData } = supabase.storage
-        .from("product-images")
-        .getPublicUrl(filename);
+      const { data: urlData } = supabase.storage.from("product-images").getPublicUrl(filename);
 
       setData({ ...data, ad_image_url: urlData.publicUrl });
     } catch (err: any) {
@@ -712,30 +903,62 @@ function AdvertisingPanel() {
       <SectionHeader eyebrow="Marketing" title="Publicidad Principal" />
 
       <div className="space-y-6">
-        <div className="flex items-center justify-between p-4 rounded-md mb-2" style={{ backgroundColor: data.ad_active ? "rgba(123, 176, 123, 0.1)" : "#0E0E0E", border: "1px solid", borderColor: data.ad_active ? "#7BB07B" : "#1A1A1A" }}>
+        <div
+          className="flex items-center justify-between p-4 rounded-md mb-2"
+          style={{
+            backgroundColor: data.ad_active ? "rgba(123, 176, 123, 0.1)" : "#0E0E0E",
+            border: "1px solid",
+            borderColor: data.ad_active ? "#7BB07B" : "#1A1A1A",
+          }}
+        >
           <div>
-            <p className="font-medium text-sm" style={{ color: data.ad_active ? "#7BB07B" : "#9A9087" }}>
+            <p
+              className="font-medium text-sm"
+              style={{ color: data.ad_active ? "#7BB07B" : "#9A9087" }}
+            >
               {data.ad_active ? "Publicidad Activada" : "Publicidad Desactivada"}
             </p>
             <p className="text-[10px] uppercase tracking-[0.1em] mt-1" style={{ color: "#5C5750" }}>
               {data.ad_active ? "El pop-up se mostrará a los clientes." : "El pop-up está oculto."}
             </p>
           </div>
-          <button 
+          <button
             onClick={() => setData({ ...data, ad_active: !data.ad_active })}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${data.ad_active ? 'bg-[#7BB07B]' : 'bg-[#2A2A2A]'}`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${data.ad_active ? "bg-[#7BB07B]" : "bg-[#2A2A2A]"}`}
           >
-            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${data.ad_active ? 'translate-x-6' : 'translate-x-1'}`} />
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${data.ad_active ? "translate-x-6" : "translate-x-1"}`}
+            />
           </button>
         </div>
 
-        <div className="p-4 mb-4 text-[11px]" style={{ backgroundColor: "#0E0E0E", border: "1px solid #1A1A1A", color: "#9A9087", opacity: data.ad_active ? 1 : 0.5 }}>
-          <p className="font-semibold mb-2" style={{ color: "#F0EBE3" }}>Dimensiones recomendadas para el Pop-up:</p>
+        <div
+          className="p-4 mb-4 text-[11px]"
+          style={{
+            backgroundColor: "#0E0E0E",
+            border: "1px solid #1A1A1A",
+            color: "#9A9087",
+            opacity: data.ad_active ? 1 : 0.5,
+          }}
+        >
+          <p className="font-semibold mb-2" style={{ color: "#F0EBE3" }}>
+            Dimensiones recomendadas para el Pop-up:
+          </p>
           <ul className="list-disc pl-4 space-y-1">
-            <li><strong>Formato Cuadrado:</strong> 1080 x 1080 píxeles (Recomendado para móviles y PC).</li>
-            <li><strong>Formato Vertical:</strong> 1080 x 1350 píxeles (Estilo post de Instagram).</li>
-            <li><strong>Formato Horizontal:</strong> 1080 x 800 píxeles.</li>
-            <li><strong>Peso de archivo:</strong> Sin límite. (Se optimizará a WebP automáticamente sin perder calidad visual).</li>
+            <li>
+              <strong>Formato Cuadrado:</strong> 1080 x 1080 píxeles (Recomendado para móviles y
+              PC).
+            </li>
+            <li>
+              <strong>Formato Vertical:</strong> 1080 x 1350 píxeles (Estilo post de Instagram).
+            </li>
+            <li>
+              <strong>Formato Horizontal:</strong> 1080 x 800 píxeles.
+            </li>
+            <li>
+              <strong>Peso de archivo:</strong> Sin límite. (Se optimizará a WebP automáticamente
+              sin perder calidad visual).
+            </li>
           </ul>
         </div>
 
@@ -747,20 +970,42 @@ function AdvertisingPanel() {
             {data.ad_image_url && !uploadingAd ? (
               <>
                 <img src={data.ad_image_url} alt="Ad" className="h-full w-full object-cover" />
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                <div
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+                >
                   <Upload size={20} style={{ color: "#C9A84C" }} />
-                  <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "#F0EBE3" }}>Cambiar imagen</span>
+                  <span
+                    className="text-[10px] uppercase tracking-[0.2em]"
+                    style={{ color: "#F0EBE3" }}
+                  >
+                    Cambiar imagen
+                  </span>
                 </div>
               </>
             ) : uploadingAd ? (
-              <div className="h-full flex flex-col items-center justify-center gap-3" style={{ color: "#C9A84C" }}>
+              <div
+                className="h-full flex flex-col items-center justify-center gap-3"
+                style={{ color: "#C9A84C" }}
+              >
                 <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: "#9A9087" }}>Subiendo imagen…</span>
+                <span
+                  className="text-[10px] uppercase tracking-[0.2em]"
+                  style={{ color: "#9A9087" }}
+                >
+                  Subiendo imagen…
+                </span>
               </div>
             ) : (
-              <div className="h-full flex flex-col items-center justify-center gap-2" style={{ color: "#9A9087" }}>
-                <Upload size={22} /><span className="text-[10px] uppercase tracking-[0.2em]">Subir imagen</span>
-                <span className="text-[10px] text-center px-4" style={{ color: "#5C5750" }}>Ver dimensiones recomendadas arriba</span>
+              <div
+                className="h-full flex flex-col items-center justify-center gap-2"
+                style={{ color: "#9A9087" }}
+              >
+                <Upload size={22} />
+                <span className="text-[10px] uppercase tracking-[0.2em]">Subir imagen</span>
+                <span className="text-[10px] text-center px-4" style={{ color: "#5C5750" }}>
+                  Ver dimensiones recomendadas arriba
+                </span>
               </div>
             )}
             <input
@@ -772,26 +1017,33 @@ function AdvertisingPanel() {
             />
           </label>
           {uploadError && (
-            <p className="text-xs mt-2" style={{ color: "#F0AFA0" }}>⚠ {uploadError}</p>
+            <p className="text-xs mt-2" style={{ color: "#F0AFA0" }}>
+              ⚠ {uploadError}
+            </p>
           )}
         </Field>
 
         <Field label="Mensaje de WhatsApp para la publicidad">
           <textarea
-            value={data.ad_message} onChange={(e) => setData({ ...data, ad_message: e.target.value })}
-            rows={2} className="form-input resize-none"
+            value={data.ad_message}
+            onChange={(e) => setData({ ...data, ad_message: e.target.value })}
+            rows={2}
+            className="form-input resize-none"
             placeholder="Ej: Hola, quiero más información sobre..."
           />
         </Field>
 
         <Field label="Enlace alternativo (Opcional)">
           <input
-            value={data.ad_link} onChange={(e) => setData({ ...data, ad_link: e.target.value })}
-            className="form-input" placeholder="https://ejemplo.com"
+            value={data.ad_link}
+            onChange={(e) => setData({ ...data, ad_link: e.target.value })}
+            className="form-input"
+            placeholder="https://ejemplo.com"
             type="url"
           />
           <p className="text-[11px] mt-2" style={{ color: "#9A9087" }}>
-            Si colocas un enlace, al hacer clic en la imagen redirigirá aquí en lugar de ir a WhatsApp. Debe comenzar con https://.
+            Si colocas un enlace, al hacer clic en la imagen redirigirá aquí en lugar de ir a
+            WhatsApp. Debe comenzar con https://.
           </p>
         </Field>
 
@@ -819,39 +1071,117 @@ function AdvertisingPanel() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-[10px] uppercase tracking-[0.25em] mb-2" style={{ color: "#9A9087" }}>{label}</label>
+      <label
+        className="block text-[10px] uppercase tracking-[0.25em] mb-2"
+        style={{ color: "#9A9087" }}
+      >
+        {label}
+      </label>
       {children}
     </div>
   );
 }
 
-function Drawer({ title, children, onClose, onSave }: { title: string; children: React.ReactNode; onClose: () => void; onSave: () => void }) {
+function Drawer({
+  title,
+  children,
+  onClose,
+  onSave,
+}: {
+  title: string;
+  children: React.ReactNode;
+  onClose: () => void;
+  onSave: () => void;
+}) {
   return (
-    <div className="fixed inset-0 z-50 flex items-stretch justify-end" style={{ backgroundColor: "rgba(0,0,0,0.7)" }} onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="w-full md:max-w-md h-full overflow-y-auto" style={{ backgroundColor: "#0A0A0A", borderLeft: "1px solid #1A1A1A" }}>
-        <div className="flex items-center justify-between px-6 py-5 border-b" style={{ borderColor: "#1A1A1A" }}>
+    <div
+      className="fixed inset-0 z-50 flex items-stretch justify-end"
+      style={{ backgroundColor: "rgba(0,0,0,0.7)" }}
+      onClick={onClose}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full md:max-w-md h-full overflow-y-auto"
+        style={{ backgroundColor: "#0A0A0A", borderLeft: "1px solid #1A1A1A" }}
+      >
+        <div
+          className="flex items-center justify-between px-6 py-5 border-b"
+          style={{ borderColor: "#1A1A1A" }}
+        >
           <h2 className="font-display text-xl">{title}</h2>
-          <button onClick={onClose} aria-label="Cerrar" className="p-1 hover:opacity-70" style={{ color: "#9A9087" }}><X size={20} /></button>
+          <button
+            onClick={onClose}
+            aria-label="Cerrar"
+            className="p-1 hover:opacity-70"
+            style={{ color: "#9A9087" }}
+          >
+            <X size={20} />
+          </button>
         </div>
         <div className="p-6 space-y-5">{children}</div>
-        <div className="sticky bottom-0 px-6 py-4 flex gap-3 border-t" style={{ borderColor: "#1A1A1A", backgroundColor: "#0A0A0A" }}>
-          <button onClick={onClose} className="flex-1 py-3 text-[11px] uppercase tracking-[0.25em]" style={{ border: "1px solid #2A2A2A", color: "#F0EBE3" }}>Cancelar</button>
-          <button onClick={onSave} className="flex-1 py-3 text-[11px] uppercase tracking-[0.25em] hover:opacity-90" style={{ backgroundColor: "#C9A84C", color: "#0A0A0A" }}>Guardar</button>
+        <div
+          className="sticky bottom-0 px-6 py-4 flex gap-3 border-t"
+          style={{ borderColor: "#1A1A1A", backgroundColor: "#0A0A0A" }}
+        >
+          <button
+            onClick={onClose}
+            className="flex-1 py-3 text-[11px] uppercase tracking-[0.25em]"
+            style={{ border: "1px solid #2A2A2A", color: "#F0EBE3" }}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={onSave}
+            className="flex-1 py-3 text-[11px] uppercase tracking-[0.25em] hover:opacity-90"
+            style={{ backgroundColor: "#C9A84C", color: "#0A0A0A" }}
+          >
+            Guardar
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
-function ConfirmModal({ title, onCancel, onConfirm }: { title: string; onCancel: () => void; onConfirm: () => void }) {
+function ConfirmModal({
+  title,
+  onCancel,
+  onConfirm,
+}: {
+  title: string;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-6" style={{ backgroundColor: "rgba(0,0,0,0.75)" }} onClick={onCancel}>
-      <div onClick={(e) => e.stopPropagation()} className="w-full max-w-sm p-6" style={{ backgroundColor: "#0A0A0A", border: "1px solid #1A1A1A" }}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-6"
+      style={{ backgroundColor: "rgba(0,0,0,0.75)" }}
+      onClick={onCancel}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-sm p-6"
+        style={{ backgroundColor: "#0A0A0A", border: "1px solid #1A1A1A" }}
+      >
         <h3 className="font-display text-lg mb-2">{title}</h3>
-        <p className="text-sm mb-6" style={{ color: "#9A9087" }}>Esta acción no se puede deshacer.</p>
+        <p className="text-sm mb-6" style={{ color: "#9A9087" }}>
+          Esta acción no se puede deshacer.
+        </p>
         <div className="flex gap-3">
-          <button onClick={onCancel} className="flex-1 py-2.5 text-[11px] uppercase tracking-[0.25em]" style={{ border: "1px solid #2A2A2A", color: "#F0EBE3" }}>Cancelar</button>
-          <button onClick={onConfirm} className="flex-1 py-2.5 text-[11px] uppercase tracking-[0.25em]" style={{ backgroundColor: "#7A1F1F", color: "#F0EBE3" }}>Eliminar</button>
+          <button
+            onClick={onCancel}
+            className="flex-1 py-2.5 text-[11px] uppercase tracking-[0.25em]"
+            style={{ border: "1px solid #2A2A2A", color: "#F0EBE3" }}
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={onConfirm}
+            className="flex-1 py-2.5 text-[11px] uppercase tracking-[0.25em]"
+            style={{ backgroundColor: "#7A1F1F", color: "#F0EBE3" }}
+          >
+            Eliminar
+          </button>
         </div>
       </div>
     </div>
@@ -859,5 +1189,7 @@ function ConfirmModal({ title, onCancel, onConfirm }: { title: string; onCancel:
 }
 
 declare global {
-  interface CSSStyleDeclaration { /* keep TS happy for inline style colors */ }
+  interface CSSStyleDeclaration {
+    /* keep TS happy for inline style colors */
+  }
 }

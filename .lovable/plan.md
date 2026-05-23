@@ -32,9 +32,11 @@ Landing oscura, elegante y centrada en conversión por WhatsApp para una florist
    - Sin librerías nuevas (solo CSS + JS mínimo).
 
 ### Notas técnicas
+
 - Mantengo arquitectura TanStack Start: una sola ruta `/` con secciones componentizadas (no hash-routing como páginas).
 - Las 15 tarjetas usan placeholders con fondo `#161616`, ícono floral discreto y nombre del producto. Cuando subas las 15 fotos las reemplazo en una pasada.
 - Tokens en `src/styles.css` para que cualquier ajuste de paleta sea de 1 línea.
 
 ### Pendiente de tu lado
+
 - Subir las 15 fotos de productos para reemplazar placeholders.

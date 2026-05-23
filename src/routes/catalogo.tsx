@@ -13,17 +13,22 @@ export const Route = createFileRoute("/catalogo")({
   component: CatalogPage,
   head: () => ({
     meta: [
-      { title: "Catálogo de Arreglos Funerarios | Miguel Flores Lima 24h" },
+      { title: "Catálogo de Arreglos Fúnebres y Coronas de Condolencias | Florería para Velorio" },
       {
         name: "description",
         content:
-          "Ve todos nuestros arreglos florales para velorio: coronas, cruces, ramos y lágrimas. Delivery mismo día en Lima Metropolitana, Callao, Ate, SJL. WhatsApp +51 994 068 553.",
+          "Explore nuestro catálogo completo de arreglos florales para velorio. Ofrecemos coronas fúnebres, flores de condolencias, lágrimas y coronas económicas con delivery urgente las 24 horas en todo Lima.",
       },
-      { name: "keywords", content: "arreglos funerarios Lima, coronas florales velorio, flores para velorio Lima, delivery arreglos florales, florería 24 horas Lima" },
-      { property: "og:title", content: "Catálogo | Miguel Flores – Arreglos Funerarios Lima" },
+      {
+        name: "keywords",
+        content:
+          "arreglos funerarios Lima, coronas florales velorio, flores para velorio Lima, delivery arreglos florales, florería 24 horas Lima, coronas de condolencias, arreglos fúnebres",
+      },
+      { property: "og:title", content: "Catálogo | Florería para Velorio – Arreglos Fúnebres" },
       {
         property: "og:description",
-        content: "Coronas, cruces y ramos para velorio con delivery el mismo día en Lima y Callao. Atención 24 horas.",
+        content:
+          "Coronas, cruces, lágrimas y arreglos fúnebres con delivery el mismo día. Atención las 24 horas en todo Lima Metropolitana y Callao.",
       },
       { property: "og:url", content: "https://www.floreriaparavelorio.com/catalogo" },
       { property: "og:type", content: "website" },
@@ -35,13 +40,14 @@ export const Route = createFileRoute("/catalogo")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "CollectionPage",
-          name: "Catálogo de Arreglos Funerarios | Miguel Flores",
-          description: "Catálogo completo de coronas, cruces y arreglos para velorio con delivery en Lima.",
+          name: "Catálogo de Arreglos Fúnebres | Florería para Velorio",
+          description:
+            "Catálogo completo de coronas de condolencias, lágrimas y arreglos fúnebres con delivery en Lima.",
           url: "https://www.floreriaparavelorio.com/catalogo",
           publisher: {
             "@type": "LocalBusiness",
-            name: "Florería Miguel Flores"
-          }
+            name: "Florería para Velorio",
+          },
         }),
       },
     ],
@@ -119,9 +125,9 @@ function CatalogPage() {
                 }}
               >
                 <span>Filtrar: {filter}</span>
-                <ChevronDown 
-                  size={16} 
-                  className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} 
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                   style={{ color: "#C9A84C" }}
                 />
               </button>
@@ -129,12 +135,9 @@ function CatalogPage() {
               {isOpen && (
                 <>
                   {/* Backdrop para cerrar al hacer clic fuera */}
-                  <div 
-                    className="fixed inset-0 z-10" 
-                    onClick={() => setIsOpen(false)} 
-                  />
-                  
-                  <ul 
+                  <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+
+                  <ul
                     className="absolute left-0 right-0 mt-1.5 z-20 max-h-64 overflow-y-auto shadow-2xl transition-all border border-[#8B6914] no-scrollbar"
                     style={{ backgroundColor: "#0E0E0E" }}
                   >
@@ -174,53 +177,55 @@ function CatalogPage() {
                 ))
               ) : visible.length > 0 ? (
                 visible.map((p) => (
-                <article key={p.slug} className="group">
-                  <div
-                    className="aspect-[4/5] w-full overflow-hidden mb-3 md:mb-5"
-                    style={{ backgroundColor: "#0E0E0E" }}
-                  >
-                    <img
-                      src={p.image}
-                      alt={`Arreglo floral para velorio ${p.name} - Delivery urgente en Lima`}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <p
-                    className="text-[10px] uppercase mb-1"
-                    style={{ color: "#9A9087", letterSpacing: "0.25em" }}
-                  >
-                    {p.category}
-                  </p>
-                  <h2 className="font-display text-foreground text-base md:text-xl font-normal leading-tight">
-                    {p.name}
-                  </h2>
-                  <div className="mt-4 flex items-center justify-between gap-2">
-                    {show_prices && p.price > 0 ? (
-                      <span className="text-sm font-semibold" style={{ color: "#C9A84C" }}>
-                        {formatPrice(p.price)}
-                      </span>
-                    ) : (
-                      <span />
-                    )}
-                    <a
-                      href={waLink(`Hola, me interesa consultar sobre: ${p.name}`)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors whitespace-nowrap pb-0.5"
-                      style={{
-                        color: "#C9A84C",
-                        borderBottom: "1px solid #8B6914",
-                      }}
+                  <article key={p.slug} className="group">
+                    <div
+                      className="aspect-[4/5] w-full overflow-hidden mb-3 md:mb-5"
+                      style={{ backgroundColor: "#0E0E0E" }}
                     >
-                      Consultar
-                    </a>
-                  </div>
-                </article>
+                      <img
+                        src={p.image}
+                        alt={`Arreglo floral para velorio ${p.name} - Delivery urgente en Lima`}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                      />
+                    </div>
+                    <p
+                      className="text-[10px] uppercase mb-1"
+                      style={{ color: "#9A9087", letterSpacing: "0.25em" }}
+                    >
+                      {p.category}
+                    </p>
+                    <h2 className="font-display text-foreground text-base md:text-xl font-normal leading-tight">
+                      {p.name}
+                    </h2>
+                    <div className="mt-4 flex items-center justify-between gap-2">
+                      {show_prices && p.price > 0 ? (
+                        <span className="text-sm font-semibold" style={{ color: "#C9A84C" }}>
+                          {formatPrice(p.price)}
+                        </span>
+                      ) : (
+                        <span />
+                      )}
+                      <a
+                        href={waLink(`Hola, me interesa consultar sobre: ${p.name}`)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors whitespace-nowrap pb-0.5"
+                        style={{
+                          color: "#C9A84C",
+                          borderBottom: "1px solid #8B6914",
+                        }}
+                      >
+                        Consultar
+                      </a>
+                    </div>
+                  </article>
                 ))
               ) : (
                 <div className="col-span-full py-20 text-center">
-                  <p className="text-muted-foreground">No se encontraron productos en esta categoría.</p>
+                  <p className="text-muted-foreground">
+                    No se encontraron productos en esta categoría.
+                  </p>
                 </div>
               )}
             </div>

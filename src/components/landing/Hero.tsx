@@ -10,12 +10,15 @@ export function Hero() {
       aria-label="El último adiós merece flores que hablen por ti"
     >
       {/* Invisible H1 for SEO (Screen Readers & Search Engines only) */}
-      <h1 className="sr-only">Florería Miguel Flores - Arreglos Funerarios en Lima y Callao con Delivery 24 Horas</h1>
+      <h1 className="sr-only">
+        Florería para Velorio: Coronas de Condolencias, Arreglos Fúnebres y Flores para Funeral en
+        Lima
+      </h1>
 
       {/* Mobile: show full image without cropping text */}
       <img
         src={heroMobile}
-        alt="Corona funeraria premium para velorio con envío a domicilio en Lima - Florería Miguel Flores"
+        alt="Corona de flores para funeral y arreglos para velorio con envío a domicilio en Lima - Florería para Velorio"
         className="block md:hidden w-full h-auto"
         width={1536}
         height={2752}
@@ -23,10 +26,13 @@ export function Hero() {
       />
 
       {/* Desktop: contain full image within viewport height */}
-      <div className="hidden md:flex w-full items-center justify-center" style={{ height: "calc(100vh - 64px)", minHeight: 520 }}>
+      <div
+        className="hidden md:flex w-full items-center justify-center"
+        style={{ height: "calc(100vh - 64px)", minHeight: 520 }}
+      >
         <img
           src={heroDesktop}
-          alt="Arreglos florales funerarios en Lima, coronas y lágrimas para condolencias - Florería Miguel Flores"
+          alt="Arreglos florales fúnebres en Lima, coronas fúnebres y lágrimas para condolencias - Florería para Velorio"
           className="max-h-full max-w-full w-auto h-auto object-contain"
           width={2752}
           height={1536}

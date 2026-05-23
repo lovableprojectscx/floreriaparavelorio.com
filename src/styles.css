@@ -9,19 +9,19 @@
 
 /* font-display: swap — evita texto invisible durante la carga (FOIT) */
 @font-face {
-  font-family: 'Playfair Display';
+  font-family: "Playfair Display";
   font-display: swap;
 }
 @font-face {
-  font-family: 'Inter';
+  font-family: "Inter";
   font-display: swap;
 }
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: 'Playfair Display', serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: "Playfair Display", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
 
   --radius-sm: 2px;
   --radius-md: 4px;
@@ -54,67 +54,100 @@
 :root {
   --radius: 4px;
   /* Funeral palette — direct mapping from spec */
-  --background: #0A0A0A;          /* bg-primary */
-  --foreground: #F0EBE3;          /* text-primary */
+  --background: #0a0a0a; /* bg-primary */
+  --foreground: #f0ebe3; /* text-primary */
   --bg-secondary: #111111;
   --card: #161616;
-  --card-foreground: #F0EBE3;
+  --card-foreground: #f0ebe3;
   --popover: #161616;
-  --popover-foreground: #F0EBE3;
-  --primary: #C9A84C;             /* accent-gold-light */
-  --primary-foreground: #0A0A0A;
+  --popover-foreground: #f0ebe3;
+  --primary: #c9a84c; /* accent-gold-light */
+  --primary-foreground: #0a0a0a;
   --secondary: #161616;
-  --secondary-foreground: #F0EBE3;
+  --secondary-foreground: #f0ebe3;
   --muted: #111111;
-  --muted-foreground: #9A9087;    /* text-secondary */
-  --accent: #8B6914;              /* accent-gold */
-  --accent-foreground: #F0EBE3;
-  --accent-light: #C9A84C;
+  --muted-foreground: #9a9087; /* text-secondary */
+  --accent: #8b6914; /* accent-gold */
+  --accent-foreground: #f0ebe3;
+  --accent-light: #c9a84c;
   --destructive: #b00020;
-  --destructive-foreground: #F0EBE3;
-  --border: #2A2A2A;
-  --input: #2A2A2A;
-  --ring: #8B6914;
-  --whatsapp: #0E7A3D; /* verde oscuro, ratio 5.43:1 con blanco — cumple WCAG AA */
+  --destructive-foreground: #f0ebe3;
+  --border: #2a2a2a;
+  --input: #2a2a2a;
+  --ring: #8b6914;
+  --whatsapp: #0e7a3d; /* verde oscuro, ratio 5.43:1 con blanco — cumple WCAG AA */
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html { scroll-behavior: smooth; }
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
 }
 
 @keyframes wa-pulse {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-  50% { transform: scale(1.05); box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 12px rgba(37, 211, 102, 0);
+  }
 }
-.wa-pulse { animation: wa-pulse 2s ease-in-out infinite; }
+.wa-pulse {
+  animation: wa-pulse 2s ease-in-out infinite;
+}
 
 @keyframes chevron-bounce {
-  0%, 100% { transform: translateY(0); opacity: 0.7; }
-  50% { transform: translateY(8px); opacity: 1; }
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
 }
-.chevron-bounce { animation: chevron-bounce 2s ease-in-out infinite; }
+.chevron-bounce {
+  animation: chevron-bounce 2s ease-in-out infinite;
+}
 
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
 
 /* Admin panel form inputs — global so they work in all panels */
 .form-input {
   width: 100%;
-  background: #0E0E0E;
-  border: 1px solid #1F1F1F;
-  color: #F0EBE3;
+  background: #0e0e0e;
+  border: 1px solid #1f1f1f;
+  color: #f0ebe3;
   padding: 10px 12px;
   font-size: 14px;
   outline: none;
   transition: border-color 0.2s;
   font-family: inherit;
 }
-.form-input:focus { border-color: #C9A84C; }
+.form-input:focus {
+  border-color: #c9a84c;
+}

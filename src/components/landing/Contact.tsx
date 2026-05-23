@@ -29,7 +29,10 @@ export function Contact() {
           <ul className="space-y-4 mb-8">
             <li className="flex items-center gap-3 text-foreground">
               <Phone size={18} className="text-primary shrink-0" />
-              <a href={`tel:${whatsapp.replace(/\s/g, "")}`} className="hover:text-primary transition-colors">
+              <a
+                href={`tel:${whatsapp.replace(/\s/g, "")}`}
+                className="hover:text-primary transition-colors"
+              >
                 {whatsapp}
               </a>
             </li>
@@ -44,7 +47,10 @@ export function Contact() {
           </ul>
 
           <a
-            href={waLink(whatsapp, "Hola, necesito un arreglo floral para un ser querido. ¿Me pueden ayudar?.")}
+            href={waLink(
+              whatsapp,
+              "Hola, necesito un arreglo floral para un ser querido. ¿Me pueden ayudar?.",
+            )}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-base font-medium text-white transition-transform hover:scale-105 w-full md:w-auto"
@@ -59,7 +65,7 @@ export function Contact() {
             src={contactImage400}
             srcSet={`${contactImage400} 400w, ${contactImage} 800w`}
             sizes="(min-width: 768px) 50vw, 100vw"
-            alt="Atención 24 horas - Florería Miguel Flores"
+            alt="Atención 24 horas - Florería para Velorio"
             className="w-full h-auto max-h-[500px] object-contain"
             width={400}
             height={400}

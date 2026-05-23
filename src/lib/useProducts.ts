@@ -29,15 +29,17 @@ export function useProducts(skip?: boolean) {
         .order("created_at", { ascending: false });
 
       if (!error && data) {
-        setProducts(data.map((p) => ({
-          id: p.id,
-          slug: p.id,
-          name: p.title || "Producto sin nombre",
-          price: Number(p.price) || 0,
-          image: p.image || "/placeholder.svg",
-          category: p.category && p.category.length > 0 ? p.category[0] : "Arreglos",
-          description: p.description || "",
-        })));
+        setProducts(
+          data.map((p) => ({
+            id: p.id,
+            slug: p.id,
+            name: p.title || "Producto sin nombre",
+            price: Number(p.price) || 0,
+            image: p.image || "/placeholder.svg",
+            category: p.category && p.category.length > 0 ? p.category[0] : "Arreglos",
+            description: p.description || "",
+          })),
+        );
       } else if (error) {
         console.error("Error fetching products:", error);
       }
@@ -64,12 +66,15 @@ export function useProducts(skip?: boolean) {
   };
 
   const updateProduct = async (id: string, product: Partial<Product>) => {
-    const { error } = await supabase.from("products").update({
-      title: product.name,
-      price: product.price,
-      image: product.image,
-      category: [product.category],
-    }).eq("id", id);
+    const { error } = await supabase
+      .from("products")
+      .update({
+        title: product.name,
+        price: product.price,
+        image: product.image,
+        category: [product.category],
+      })
+      .eq("id", id);
     if (!error) fetchProducts();
   };
 
@@ -80,7 +85,6 @@ export function useProducts(skip?: boolean) {
 
   return { products, loading, addProduct, updateProduct, deleteProduct, refresh: fetchProducts };
 }
-
 
 export function useCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -157,7 +161,7 @@ export function useSettings() {
       .select("*")
       .eq("tenant_id", TENANT_ID)
       .single();
-    
+
     if (!error && data) {
       setSettings({
         whatsapp: data.whatsapp || "",
@@ -188,7 +192,7 @@ export function useSettings() {
       ad_link: newSettings.ad_link,
       ad_active: newSettings.ad_active,
       show_prices: newSettings.show_prices,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
     });
     if (!error) setSettings(newSettings);
   };

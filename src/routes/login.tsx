@@ -41,7 +41,10 @@ function LoginPage() {
 
     if (isLocked) {
       const remaining = Math.ceil((lockedUntil! - Date.now()) / 1000 / 60);
-      setMessage({ text: `Demasiados intentos. Espera ${remaining} min antes de volver a intentar.`, type: "error" });
+      setMessage({
+        text: `Demasiados intentos. Espera ${remaining} min antes de volver a intentar.`,
+        type: "error",
+      });
       return;
     }
 
@@ -62,7 +65,10 @@ function LoginPage() {
 
       if (newAttempts >= MAX_ATTEMPTS) {
         setLockedUntil(Date.now() + LOCKOUT_MS);
-        setMessage({ text: "Demasiados intentos fallidos. Acceso bloqueado por 5 minutos.", type: "error" });
+        setMessage({
+          text: "Demasiados intentos fallidos. Acceso bloqueado por 5 minutos.",
+          type: "error",
+        });
       } else {
         setMessage({
           text: `Correo o contraseña incorrectos. ${MAX_ATTEMPTS - newAttempts} intento(s) restante(s).`,
@@ -76,9 +82,15 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <div className="w-full max-w-md p-8 rounded-xl border" style={{ backgroundColor: "#0A0A0A", borderColor: "#1A1A1A" }}>
+      <div
+        className="w-full max-w-md p-8 rounded-xl border"
+        style={{ backgroundColor: "#0A0A0A", borderColor: "#1A1A1A" }}
+      >
         <div className="text-center mb-8">
-          <p className="text-[10px] uppercase mb-2" style={{ color: "#C9A84C", letterSpacing: "0.3em" }}>
+          <p
+            className="text-[10px] uppercase mb-2"
+            style={{ color: "#C9A84C", letterSpacing: "0.3em" }}
+          >
             Acceso
           </p>
           <h1 className="font-display text-2xl text-foreground">Panel de Administración</h1>
@@ -89,7 +101,10 @@ function LoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-[10px] uppercase tracking-[0.25em] mb-2" style={{ color: "#9A9087" }}>
+            <label
+              className="block text-[10px] uppercase tracking-[0.25em] mb-2"
+              style={{ color: "#9A9087" }}
+            >
               Correo electrónico
             </label>
             <input
@@ -105,7 +120,10 @@ function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase tracking-[0.25em] mb-2" style={{ color: "#9A9087" }}>
+            <label
+              className="block text-[10px] uppercase tracking-[0.25em] mb-2"
+              style={{ color: "#9A9087" }}
+            >
               Contraseña
             </label>
             <input
@@ -121,9 +139,7 @@ function LoginPage() {
           </div>
 
           {message && (
-            <div className="p-3 text-xs rounded bg-red-900/20 text-red-400">
-              {message.text}
-            </div>
+            <div className="p-3 text-xs rounded bg-red-900/20 text-red-400">{message.text}</div>
           )}
 
           <button

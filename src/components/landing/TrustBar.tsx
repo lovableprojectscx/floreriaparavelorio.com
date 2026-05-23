@@ -13,7 +13,11 @@ export function TrustBar() {
   return (
     <div
       className="w-full"
-      style={{ backgroundColor: "#111111", borderTop: "1px solid #2A2A2A", borderBottom: "1px solid #2A2A2A" }}
+      style={{
+        backgroundColor: "#111111",
+        borderTop: "1px solid #2A2A2A",
+        borderBottom: "1px solid #2A2A2A",
+      }}
     >
       <div className="mx-auto max-w-6xl px-4 py-5">
         <ul className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-0">

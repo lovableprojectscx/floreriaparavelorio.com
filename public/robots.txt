@@ -1,4 +1,4 @@
-# Florería Miguel Flores — robots.txt
+# Florería para Velorio — robots.txt
 # https://www.floreriaparavelorio.com
 
 User-agent: *

@@ -16,10 +16,34 @@ export type Product = {
 export const categories: ProductCategory[] = ["Coronas", "Arreglos"];
 
 export const products: Product[] = [
-  { slug: "corona-rosa-blanca", name: "Corona Rosa y Blanca", image: product1, category: "Coronas", price: 350 },
-  { slug: "arreglo-recuerdo", name: "Arreglo Recuerdo", image: product2, category: "Arreglos", price: 220 },
-  { slug: "arreglo-rosas-amarillas", name: "Arreglo Rosas Amarillas", image: product3, category: "Arreglos", price: 240 },
-  { slug: "arreglo-azul-celeste", name: "Arreglo Azul Celeste", image: product4, category: "Arreglos", price: 260 },
+  {
+    slug: "corona-rosa-blanca",
+    name: "Corona Rosa y Blanca",
+    image: product1,
+    category: "Coronas",
+    price: 350,
+  },
+  {
+    slug: "arreglo-recuerdo",
+    name: "Arreglo Recuerdo",
+    image: product2,
+    category: "Arreglos",
+    price: 220,
+  },
+  {
+    slug: "arreglo-rosas-amarillas",
+    name: "Arreglo Rosas Amarillas",
+    image: product3,
+    category: "Arreglos",
+    price: 240,
+  },
+  {
+    slug: "arreglo-azul-celeste",
+    name: "Arreglo Azul Celeste",
+    image: product4,
+    category: "Arreglos",
+    price: 260,
+  },
 ];
 
 export const formatPrice = (price: number) => `S/ ${price.toFixed(0)}`;

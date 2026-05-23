@@ -76,19 +76,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      // --- SEO Base: Florería Miguel Flores ---
-      { title: "Miguel Flores | Arreglos Funerarios en Lima · Delivery 24 horas" },
-      { name: "description", content: "Arreglos florales para velorio con delivery el mismo día en Lima y Callao. Coronas, cruces y ramos. Atención inmediata por WhatsApp +51 994 068 553." },
-      { name: "author", content: "Florería Miguel Flores" },
+      // --- SEO Base: Florería para Velorio ---
+      { title: "Florería para Velorio | Coronas de Condolencias y Arreglos Fúnebres" },
+      {
+        name: "description",
+        content:
+          "Florería para Velorio especializada en la preparación y delivery de coronas de flores para funeral, arreglos fúnebres, flores de condolencias y lágrimas con envío urgente las 24 horas en todo Lima.",
+      },
+      { name: "author", content: "Florería para Velorio" },
       { name: "robots", content: "index, follow" },
       { name: "geo.region", content: "PE-LIM" },
       { name: "geo.placename", content: "Lima, Perú" },
       // --- Open Graph (WhatsApp, Facebook, LinkedIn) ---
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "es_PE" },
-      { property: "og:site_name", content: "Florería Miguel Flores" },
-      { property: "og:title", content: "Miguel Flores | Arreglos Funerarios en Lima" },
-      { property: "og:description", content: "Arreglos florales para velorio con delivery el mismo día. Coronas, cruces y ramos. Atención 24 horas por WhatsApp." },
+      { property: "og:site_name", content: "Florería para Velorio" },
+      {
+        property: "og:title",
+        content: "Florería para Velorio | Coronas de Condolencias y Arreglos Fúnebres",
+      },
+      {
+        property: "og:description",
+        content:
+          "Coronas de flores para funeral, arreglos fúnebres delivery, lágrimas y flores de condolencias en Lima Metropolitana con envío urgente las 24 horas.",
+      },
       { property: "og:url", content: "https://www.floreriaparavelorio.com" },
       { property: "og:image", content: "https://www.floreriaparavelorio.com/og-image.png" },
       { property: "og:image:width", content: "1200" },
@@ -96,15 +107,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image:type", content: "image/png" },
       // --- Twitter Card ---
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Miguel Flores | Arreglos Funerarios Lima 24h" },
-      { name: "twitter:description", content: "Delivery de arreglos florales para velorio en Lima y Callao. Atención inmediata por WhatsApp." },
+      {
+        name: "twitter:title",
+        content: "Florería para Velorio | Coronas de Condolencias y Arreglos Fúnebres",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Envío urgente de coronas de flores para funeral, arreglos fúnebres delivery y flores de condolencias en Lima Metropolitana con atención las 24 horas.",
+      },
       { name: "twitter:image", content: "https://www.floreriaparavelorio.com/og-image.png" },
     ],
     links: [
       // Solo Supabase necesita preconnect — fuentes ya son locales
-      { rel: "preconnect", href: "https://llasbukvdjlvwlgofgke.supabase.co", crossOrigin: "anonymous" },
+      {
+        rel: "preconnect",
+        href: "https://llasbukvdjlvwlgofgke.supabase.co",
+        crossOrigin: "anonymous",
+      },
       { rel: "icon", type: "image/webp", href: "/logo.webp" },
-      { rel: "sitemap", type: "application/xml", href: "https://www.floreriaparavelorio.com/sitemap.xml" },
+      {
+        rel: "sitemap",
+        type: "application/xml",
+        href: "https://www.floreriaparavelorio.com/sitemap.xml",
+      },
       {
         rel: "stylesheet",
         href: appCss,

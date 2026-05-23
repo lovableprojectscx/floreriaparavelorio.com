@@ -44,11 +44,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       });
   }, []);
 
-  return (
-    <SettingsContext.Provider value={settings}>
-      {children}
-    </SettingsContext.Provider>
-  );
+  return <SettingsContext.Provider value={settings}>{children}</SettingsContext.Provider>;
 }
 
 /** Hook para consumir la configuración del negocio en cualquier componente */

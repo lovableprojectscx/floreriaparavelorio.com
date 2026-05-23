@@ -7,6 +7,7 @@ import { TrustBar } from "@/components/landing/TrustBar";
 import { Catalog } from "@/components/landing/Catalog";
 import { Empathy } from "@/components/landing/Empathy";
 import { Contact } from "@/components/landing/Contact";
+import { SeoContent } from "@/components/landing/SeoContent";
 import { Footer } from "@/components/landing/Footer";
 import { FloatingWhatsApp } from "@/components/landing/FloatingWhatsApp";
 import { X } from "lucide-react";
@@ -17,10 +18,7 @@ const TENANT_ID = "54a66b4a-6181-4b3f-b173-6398d0f33b2d";
 // Server function: corre en servidor, no en cliente
 const fetchProductsSSR = createServerFn({ method: "GET" }).handler(async () => {
   const { createClient } = await import("@supabase/supabase-js");
-  const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_PUBLISHABLE_KEY!,
-  );
+  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!);
   const { data } = await supabase
     .from("products")
     .select("id, title, price, image, category")
@@ -41,10 +39,7 @@ const fetchProductsSSR = createServerFn({ method: "GET" }).handler(async () => {
 
 const fetchSettingsSSR = createServerFn({ method: "GET" }).handler(async () => {
   const { createClient } = await import("@supabase/supabase-js");
-  const supabase = createClient(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_PUBLISHABLE_KEY!,
-  );
+  const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!);
   const { data } = await supabase
     .from("tenant_settings")
     .select("whatsapp, ad_image_url, ad_message, ad_link, ad_active, show_prices")
@@ -64,40 +59,54 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Miguel Flores | Arreglos Funerarios Lima · Delivery 24 Horas" },
+      { title: "Florería para Velorio | Coronas de Condolencias y Arreglos Fúnebres" },
       {
         name: "description",
         content:
-          "Florería especialista en arreglos para velorio en Lima. Coronas, cruces, ramos y lágrimas con delivery el mismo día en Lima Metropolitana, Callao, Ate y SJL. Llámanos ahora: +51 994 068 553.",
+          "Florería para Velorio especializada en la preparación y delivery de coronas de flores para funeral, arreglos fúnebres de condolencias y lágrimas con envío urgente las 24 horas en todo Lima.",
       },
-      { name: "keywords", content: "arreglos funerarios Lima, flores para velorio Lima, coronas florales velorio, florería delivery 24 horas Lima, arreglos florales velatorio" },
+      {
+        name: "keywords",
+        content:
+          "corona de flores para funeral, arreglos fúnebres delivery, flores de condolencias, corona funeraria urgente, arreglos para velorio, coronas funerarias Lima, flores para entierro, condolencias con flores, corona de rosas blancas, arreglo fúnebre, Corona de condolencias, Coronas fúnebres, Coronas para San Juan de Lurigancho, Arreglos florales fúnebres, Flores para velorio, Florería en San Borja, Corona estadio nacional, Mercado de flores para condolencias, Arreglos florales para velorio, Lágrimas y coronas fúnebres, Coronas en cafae, Coronas económicas",
+      },
       { name: "robots", content: "index, follow" },
       // Open Graph
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "es_PE" },
       { property: "og:url", content: "https://www.floreriaparavelorio.com" },
-      { property: "og:title", content: "Miguel Flores | Arreglos Funerarios Lima – Delivery 24h" },
+      {
+        property: "og:title",
+        content: "Florería para Velorio | Coronas de Condolencias y Arreglos Fúnebres",
+      },
       {
         property: "og:description",
-        content: "Coronas, cruces y ramos para velorio con delivery el mismo día. Atención 24 horas en Lima y Callao. WhatsApp: +51 994 068 553.",
+        content:
+          "Envío urgente de coronas de flores para funeral, arreglos fúnebres delivery y flores de condolencias en Lima. Atención empática las 24 horas.",
       },
       // Twitter
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Miguel Flores – Arreglos Funerarios Lima 24h" },
-      { name: "twitter:description", content: "Delivery de arreglos florales para velorio en Lima y Callao. Atención 24 horas." },
+      {
+        name: "twitter:title",
+        content: "Florería para Velorio | Coronas de Condolencias y Arreglos Fúnebres",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Envío urgente de coronas de flores para funeral, arreglos fúnebres delivery y flores de condolencias en Lima.",
+      },
     ],
-    links: [
-      { rel: "canonical", href: "https://www.floreriaparavelorio.com" },
-    ],
+    links: [{ rel: "canonical", href: "https://www.floreriaparavelorio.com" }],
     scripts: [
       {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": ["LocalBusiness", "Florist"],
-          name: "Florería Miguel Flores",
+          name: "Florería para Velorio",
           image: "https://www.floreriaparavelorio.com/og-image.png",
-          description: "Especialistas en arreglos florales para velorio. Coronas, cruces y lágrimas con delivery el mismo día en Lima y Callao.",
+          description:
+            "Florería especializada en la preparación y delivery de coronas de flores para funeral, arreglos fúnebres y flores de condolencias con envío urgente 24h.",
           telephone: "+51994068553",
           url: "https://www.floreriaparavelorio.com",
           address: {
@@ -109,15 +118,23 @@ export const Route = createFileRoute("/")({
           geo: {
             "@type": "GeoCoordinates",
             latitude: -12.0464,
-            longitude: -77.0428
+            longitude: -77.0428,
           },
           openingHoursSpecification: {
             "@type": "OpeningHoursSpecification",
-            dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            dayOfWeek: [
+              "Monday",
+              "Tuesday",
+              "Wednesday",
+              "Thursday",
+              "Friday",
+              "Saturday",
+              "Sunday",
+            ],
             opens: "00:00",
-            closes: "23:59"
+            closes: "23:59",
           },
-          priceRange: "$$"
+          priceRange: "$$",
         }),
       },
     ],
@@ -168,22 +185,23 @@ function Index() {
         <Catalog initialProducts={products} />
         <Empathy />
         <Contact />
+        <SeoContent />
       </main>
       <Footer />
       <FloatingWhatsApp />
 
       {/* Popup Publicitario */}
       {showAd && settings?.ad_image_url && (
-        <div 
+        <div
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity"
           onClick={handleCloseAd}
         >
-          <div 
+          <div
             className="relative w-full max-w-3xl overflow-hidden rounded-md shadow-2xl"
             onClick={(e) => e.stopPropagation()}
             style={{ backgroundColor: "#0A0A0A", border: "1px solid #C9A84C" }}
           >
-            <button 
+            <button
               onClick={handleCloseAd}
               className="absolute top-3 right-3 z-10 p-2 bg-black/60 hover:bg-black/90 rounded-full text-white transition-colors"
               aria-label="Cerrar publicidad"
@@ -191,10 +209,10 @@ function Index() {
               <X size={20} />
             </button>
             <div className="w-full cursor-pointer group" onClick={handleAdClick}>
-              <img 
-                src={settings.ad_image_url} 
-                alt="Publicidad Especial" 
-                className="w-full h-auto max-h-[80vh] object-cover transition-transform duration-700 group-hover:scale-[1.02]" 
+              <img
+                src={settings.ad_image_url}
+                alt="Publicidad Especial"
+                className="w-full h-auto max-h-[80vh] object-cover transition-transform duration-700 group-hover:scale-[1.02]"
               />
             </div>
           </div>
